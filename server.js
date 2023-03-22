@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const { db_sync } = require("./config/db");
 const models = require('./models')
-// const router = require("./routes/index");
+const router = require("./routes/index");
 // const cors = require("cors");
 const volleyball = require('volleyball');
 require("dotenv").config();
@@ -23,11 +23,11 @@ app.use(volleyball);
 
 app.use(express.json());
 
-// app.use("/", router);
+app.use("/", router);
 
 db_sync()
   .then(() => {
-    app.listen(PORT, () => console.log(`Server ON PORT: 3001`));
+    app.listen(PORT, () => console.log(`Server ON PORT: ${PORT}`));
 
   })
   .catch((err) => {

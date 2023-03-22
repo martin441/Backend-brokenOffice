@@ -1,3 +1,4 @@
-const Prueba = require("./Prueba");
+const User = require("./User");
+const Office = require("./Office");
 
-module.exports = { Prueba };
+module.exports = { User, Office };
