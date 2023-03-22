@@ -23,7 +23,7 @@ const user = new Schema({
   },
   salt: {
     type: String,
-    required: true
+    required: false
   },
   email: {
     type: String,
@@ -43,6 +43,10 @@ const user = new Schema({
   office: {
     type: mongoose.ObjectId,
     ref: 'Office' 
+  },
+  reportHistory: {
+    type: mongoose.ObjectId,
+    ref: 'History' 
   }
 });
 
