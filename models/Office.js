@@ -7,8 +7,17 @@ const office = new Schema({
     required: true,
   },
   address: {
-    type: String,
-    required: true,
+    street: {
+      type: String,
+      required: true
+    },
+    zip: {
+      type: String,
+      required: true
+    },
+    floor: {
+      type: String
+    }
   },
   coordinates: {
     type: String,
