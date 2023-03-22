@@ -5,7 +5,7 @@ class UserController {
     // email hardcodeado! usaríamos la cookie para obtener el payload
     try {
       const { error, data } = await UserServices.findOneByEmail(
-        "admin@mail.com"
+        "admin@globant.com"
       );
       if (error) {
         return res.status(404).send(data);
