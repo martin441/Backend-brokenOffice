@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const bcrypt = require("bcrypt");
 
 const user = new Schema({
   name: {
@@ -17,13 +18,16 @@ const user = new Schema({
       message: '{VALUE} is not supported'
     }
   },
+  role: {
+    type: String,
+    required: true
+  },
   password: {
     type: String,
     required: true,
   },
   salt: {
-    type: String,
-    required: false
+    type: String
   },
   email: {
     type: String,
@@ -50,6 +54,35 @@ const user = new Schema({
   }
 });
 
-const User = mongoose.model("User", user);
+user.methods.encryptPassword = function (password, salt) {
+  return bcrypt.hash(password, salt);
+}
 
+user.methods.validatePassword = async function (password) {
+  try {
+    const hash = await this.encryptPassword(password, this.salt);
+    return hash === this.password
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+user.pre("save", async function (next) {
+  let userInstance = this;
+  if (!userInstance.isModified('password')) return next();
+  const salt = bcrypt.genSaltSync();
+  userInstance.salt = salt;
+  try {
+    const hash = await userInstance.encryptPassword(userInstance.password, salt)
+    userInstance.password = hash;
+    return next();
+  } catch (error) {
+    return next(error)
+  }
+})
+
+
+
+
+const User = mongoose.model("User", user);
 module.exports = User;

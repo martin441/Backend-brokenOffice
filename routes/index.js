@@ -30,8 +30,10 @@ router.post("/models", async (req, res) => {
     singleUsr.save(); */
     //const singleUsr = await User.findOne({name: "Pepe"}).populate("office");
     // const test = await singleUsr.populate("office");
-    const singleUsr = await User.findOneAndUpdate({name: "Pepe"}, {office: "641b0ffb95c796a5fd6dc8bc"}, {runValidators: true, new:true}).populate("office");
-    
+    //const singleUsr = await User.findOneAndUpdate({name: "Admin"}, {lastName: "cambiado"}, {runValidators: true, new:true}).populate("office");
+    const singleUsr = await User.findOne({name: "Admin"});
+    singleUsr.password = "unanueva"
+    await singleUsr.save()
     res.send(singleUsr);
   } catch (error) {
     console.error(error);
