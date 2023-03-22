@@ -18,7 +18,7 @@ class UserController {
 
   static async editProfile(req, res, next) {
     // email hardcodeado! usaríamos la cookie para obtener el payload
-    
+    // req.body with the exact properties to change!
     try {
       const { error, data } = await UserServices.updateProfile(
         req.body,
