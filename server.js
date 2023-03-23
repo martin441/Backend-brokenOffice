@@ -7,8 +7,16 @@ const volleyball = require("volleyball");
 require("dotenv").config();
 const { PORT } = process.env;
 const cookiesParser = require("cookie-parser");
+const cors = require("cors");
 
 app.use(cookiesParser());
+
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 app.use(volleyball);
 
