@@ -33,10 +33,11 @@ class UserController {
   }
   static async editPassword(req, res, next) {
     
-    const { password } = req.body;
+    const { oldPassword, newPassword } = req.body;
+    // antes un checkeo con la contraseña vieja!
     try {
       const { error, data } = await UserServices.updatePassword(
-        password,
+        newPassword,
         "admin@globant.com"
       );
       if (error) {
