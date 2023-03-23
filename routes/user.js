@@ -4,7 +4,6 @@ const UserController = require("../controllers/user");
 const { validateUser } = require("../middleware/auth");
 
 
-
 router.get("/profile", validateUser, UserController.getProfile)
 
 router.put("/edit/profile", validateUser, UserController.editProfile)
@@ -15,6 +14,6 @@ router.post("/login", UserController.login)
 
 router.get("/me", validateUser, UserController.userMe);
 
-router.get("/logout", validateUser, UserController.logoutUser);
+router.post("/logout", validateUser, UserController.logoutUser);
 
 module.exports = router;
