@@ -2,7 +2,7 @@ const UserServices = require("../services/user");
 
 class UserController {
   static async getProfile(req, res, next) {
-    // email hardcodeado! usaríamos la cookie para obtener el payload
+    
     try {
       const { error, data } = await UserServices.findOneByEmail(
         "admin@globant.com"
@@ -17,8 +17,7 @@ class UserController {
   }
 
   static async editProfile(req, res, next) {
-    // email hardcodeado! usaríamos la cookie para obtener el payload
-    // req.body with the exact properties to change!
+    
     try {
       const { error, data } = await UserServices.updateProfile(
         req.body,
@@ -33,7 +32,7 @@ class UserController {
     }
   }
   static async editPassword(req, res, next) {
-    // email hardcodeado! usaríamos la cookie para obtener el payload
+    
     const { password } = req.body;
     try {
       const { error, data } = await UserServices.updatePassword(
