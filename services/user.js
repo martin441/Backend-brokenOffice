@@ -20,9 +20,8 @@ class UserServices {
       return { error: true, data: error };
     }
   }
-  static async updatePassword(password, email) {
+  static async updatePassword(password, user) {
     try {
-      const user = await User.findOne({ email });
       user.password = password;
       await user.save();
       return { error: false, data: user };
