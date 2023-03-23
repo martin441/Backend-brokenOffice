@@ -15,7 +15,7 @@ const user = new Schema({
     type: String,
     enum: {
       values: ['standard', 'service', 'admin'],
-      message: '{VALUE} is not supported'
+      message: 'Validation error'
     }
   },
   role: {
@@ -31,7 +31,7 @@ const user = new Schema({
   },
   email: {
     type: String,
-    required: [true, "Please enter a valid email"],
+    required: [true, "Please enter an email"],
     lowercase: true,
     unique: true
   },
