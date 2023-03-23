@@ -13,4 +13,8 @@ router.put("/edit/password", validateUser, UserController.editPassword)
 
 router.post("/login", UserController.login)
 
+router.get("/me", validateUser, UserController.userMe);
+
+router.get("/logout", validateUser, UserController.logoutUser);
+
 module.exports = router;

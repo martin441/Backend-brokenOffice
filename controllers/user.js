@@ -78,6 +78,14 @@ class UserController {
       res.status(404).send(error);
     }
   }
+
+  static async userMe(req, res, next) {
+    res.send(req.user);
+  }
+
+  static async logoutUser(req, res, next) {
+    res.clearCookie("token").status(204).send()
+  }
 }
 
 module.exports = UserController;
