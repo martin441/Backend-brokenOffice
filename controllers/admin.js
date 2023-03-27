@@ -22,18 +22,18 @@ class UserController {
     } catch (error) {
       res.status(404).send(error);
     }
+  }  
+  static async editUser(req, res, next) {
+    const {email, type} = req.body;
+    console.log(email, type)
+    try {
+      const { error, data }  = await AdminServices.editType(email, type);      
+      if (error) return res.status(404).send(data);
+      res.send("Updated successfully");
+    } catch (error) {
+      res.status(404).send(error);
+    }
   }
-  //THIS IS YET TO BE FINISHED 
-//   static async editUser(req, res, next) {
-//     const {email} = req.body;
-//     try {
-//       const { error, data }  = await AdminServices.editType(email);      
-//       if (error) return res.status(404).send(data);
-//       res.send("Updated successfully");
-//     } catch (error) {
-//       res.status(404).send(error);
-//     }
-//   }
   static async deleteUser(req, res, next) {
     const {email} = req.body;
     try {

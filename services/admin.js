@@ -25,17 +25,14 @@ class AdminServices {
       return { error: true, data: error };
     }
   }
-//   static async editType(email) {    
-//     try {      
-//       const privilegesUpdated = await User.findOneAndUpdate({ email }, update, {
-//         runValidators: true,
-//         new: true,
-//       }).populate("office");
-//       return { error: false, data: privilegesUpdated };
-//     } catch (error) {
-//       return { error: true, data: error };
-//     }
-//   }
+  static async editType(email, type) {    
+    try {      
+      const privilegesUpdated = await User.findOneAndUpdate({ email }, {type})
+      return { error: false, data: privilegesUpdated };
+    } catch (error) {
+      return { error: true, data: error };
+    }
+  }
   static async removeUser(email) {        
     try {      
       const removedUser = await User.deleteOne({ email });
