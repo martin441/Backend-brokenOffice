@@ -15,11 +15,15 @@ const user = new Schema({
   },
   type: {
     type: String,
-    required: true
-    /* enum: {
-      values: ['standard', 'service', 'admin'],
-      message: 'Validation error'
-    } */
+    required: true,
+    enum: [ALPHAT, BETAT, GAMAT, OMEGAT],
+    set: function(value) {
+      if (value === ALPHAT) return ALPHA
+      if (value === BETAT) return BETA
+      if (value === GAMAT) return GAMA
+      if (value === OMEGAT) return OMEGA
+      throw new TypeError('Invalid credentials');
+    }
   },
   role: {
     type: String,
@@ -72,20 +76,6 @@ user.methods.validatePassword = async function (password) {
 
 user.pre("save", async function (next) {
   let userInstance = this;
-  if (userInstance.isModified('type')) {
-    if (userInstance.type === ALPHAT) {
-      userInstance.type = ALPHA;
-    }
-    if (userInstance.type === BETAT) {
-      userInstance.type = BETA;
-    }
-    if (userInstance.type === GAMAT) {
-      userInstance.type = GAMA;
-    }
-    if (userInstance.type === OMEGAT) {
-      userInstance.type = OMEGA;
-    }
-  }
   if (!userInstance.isModified('password')) return next();
   const salt = bcrypt.genSaltSync();
   userInstance.salt = salt;
