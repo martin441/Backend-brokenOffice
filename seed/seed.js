@@ -170,12 +170,22 @@ const seedUserOffices = async () => {
     },
   ];
 
+  const test = {
+    name: "Super Admin",
+    lastName: "Owner",
+    type: "superAdmin",
+    role: "God",
+    password: "12345",
+    email: "superadmin66@globant.com",
+  }
+
   try {
     await db_sync();
-    users.forEach(async (item) => {
+    /* users.forEach(async (item) => {
       return await User.create(item);
     })
-    await Office.insertMany(offices);
+    await Office.insertMany(offices); */
+    await User.create(test)
     process.exit();
   } catch (error) {
     console.error(error);
