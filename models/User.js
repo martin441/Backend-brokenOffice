@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+require("dotenv").config();
+const { SALT, ALPHA, ALPHAT, BETA, BETAT, GAMA, GAMAT, OMEGA, OMEGAT } = process.env;
 const bcrypt = require("bcrypt");
 
 const user = new Schema({
@@ -13,10 +15,11 @@ const user = new Schema({
   },
   type: {
     type: String,
-    enum: {
+    required: true
+    /* enum: {
       values: ['standard', 'service', 'admin'],
       message: 'Validation error'
-    }
+    } */
   },
   role: {
     type: String,
@@ -69,20 +72,31 @@ user.methods.validatePassword = async function (password) {
 
 user.pre("save", async function (next) {
   let userInstance = this;
+  if (userInstance.isModified('type')) {
+    if (userInstance.type === ALPHAT) {
+      userInstance.type = ALPHA;
+    }
+    if (userInstance.type === BETAT) {
+      userInstance.type = BETA;
+    }
+    if (userInstance.type === GAMAT) {
+      userInstance.type = GAMA;
+    }
+    if (userInstance.type === OMEGAT) {
+      userInstance.type = OMEGA;
+    }
+  }
   if (!userInstance.isModified('password')) return next();
   const salt = bcrypt.genSaltSync();
   userInstance.salt = salt;
   try {
-    const hash = await userInstance.encryptPassword(userInstance.password, salt)
-    userInstance.password = hash;
+    const hashPass = await userInstance.encryptPassword(userInstance.password, salt)
+    userInstance.password = hashPass;
     return next();
   } catch (error) {
     return next(error)
   }
 })
-
-
-
 
 const User = mongoose.model("User", user);
 module.exports = User;
