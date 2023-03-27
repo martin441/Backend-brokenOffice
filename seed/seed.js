@@ -4,10 +4,18 @@ const { User, Office } = require("../models");
 const seedUserOffices = async () => {
   const users = [
     {
-      name: "Admin",
+      name: "Super Admin",
       lastName: "Owner",
-      type: "admin",
+      type: "superAdmin",
       role: "God",
+      password: "12345",
+      email: "superadmin@globant.com",
+    },
+    {
+      name: "Admin",
+      lastName: "lite",
+      type: "admin",
+      role: "admin",
       password: "12345",
       email: "admin@globant.com",
     },
