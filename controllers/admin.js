@@ -23,7 +23,7 @@ class UserController {
       res.status(404).send(error);
     }
   }  
-  static async editUser(req, res, next) {
+  static async editUserType(req, res, next) {
     const {email, type} = req.body;
     console.log(email, type)
     try {

@@ -1,11 +1,12 @@
 const express = require("express");
 const OfficesController = require("../controllers/offices");
+const { validateAlpha } = require("../middleware/validateAlpha");
 const router = express.Router();
-const { validateUser } = require("../middleware/auth");
+
 
 router.get("/", OfficesController.getOffices);
-router.post("/add", OfficesController.addOffice);
-router.delete("/delete/:officeId", OfficesController.deleteOffice);
-router.put("/edit/:officeId", OfficesController.editOffice);
+router.post("/add", validateAlpha, OfficesController.addOffice);
+router.delete("/delete/:officeId", validateAlpha, OfficesController.deleteOffice);
+router.put("/edit/:officeId", validateAlpha, OfficesController.editOffice);
 
 module.exports = router;
