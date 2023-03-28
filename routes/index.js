@@ -3,6 +3,7 @@ const router = express.Router();
 const userRouter = require("./user");
 const officesRouter = require("./offices");
 const collaboratorsRouter = require("./collaborators");
+const reportsRouter = require("./reports");
 const { validateUser } = require("../middleware/auth");
 const { Office } = require("../models");
 
@@ -10,6 +11,7 @@ const { Office } = require("../models");
 router.use("/user", userRouter);
 router.use("/offices", validateUser, officesRouter);
 router.use("/collaborators", validateUser, collaboratorsRouter);
+router.use("/reports", validateUser, reportsRouter);
 
 router.get("/probando", async (req, res) => {
     const casa = { type: "Point", coordinates: [-62.261036, -38.709426] };

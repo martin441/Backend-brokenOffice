@@ -39,6 +39,10 @@ const report = new Schema({
   messages: {
     type: Array,
   },
+  tags: {
+    type: Array,
+    required: false,
+  },
 });
 
 const Report = mongoose.model("Report", report);
