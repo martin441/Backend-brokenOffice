@@ -60,10 +60,10 @@ const user = new Schema({
     type: mongoose.ObjectId,
     ref: "Office",
   },
-  reportHistory: {
+  reports: [{
     type: mongoose.ObjectId,
-    ref: "History",
-  },
+    ref: "Report",
+  }],
 });
 
 user.methods.encryptPassword = function (password, salt) {
