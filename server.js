@@ -29,6 +29,7 @@ app.use((err, req, res, next) => {
   res.status(500).send(err.message);
 });
 
+
 db_sync()
   .then(() => {
     app.listen(PORT, () => console.log(`Server ON PORT: ${PORT}`));

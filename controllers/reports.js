@@ -1,20 +1,48 @@
 const ReportsServices = require("../services/reports");
+const UserServices = require("../services/user");
+require("dotenv").config();
+const { BETA } = process.env;
 
 class ReportsController {
   static async allReports(req, res, next) {
     try {
+      const { error, data } = await ReportsServices.getAllReports();
+      if (error) return res.status(404).send(data);
+      res.status(200).send(data);
     } catch (error) {
       res.status(404).send(error);
     }
   }
-  static async createUeport(req, res, next) {
+  static async viewReports(req, res, next) {
     try {
+        const type = req.user.type === BETA ? "solver" : "issuer";
+        const user = await UserServices.findOneByEmail(req.user.email);
+        const {error, data} = await ReportsServices.getReports(user._id, type)
+        if (error) return res.status(404).send(data);
+        res.status(200).send(data);
+    } catch (error) {
+      res.status(404).send(error);
+    }
+  }
+  static async createReport(req, res, next) {
+    try {
+      const user = await UserServices.findOneByEmail(req.user.email);
+      const report = req.body;
+      report.issuer = user.data._id;
+      const { error, data } = await ReportsServices.createNewReport(report);
+      if (error) return res.status(404).send(data);
+      res.status(201).send(data);
     } catch (error) {
       res.status(404).send(error);
     }
   }
   static async editReportState(req, res, next) {
     try {
+        const {reportId} = req.params;
+        const state = req.body; 
+        const {error,data} = await ReportsServices.editStateReport(reportId, state)
+        if (error) return res.status(404).send(data);
+        res.status(200).send(data);
     } catch (error) {
       res.status(404).send(error);
     }
@@ -26,12 +54,18 @@ class ReportsController {
     }
   }
   static async deleteReport(req, res, next) {
-    const { userEmail } = req.params;
     try {
+        const {reportId} = req.params;
+        const {error, data} = await ReportsServices.deleteReport(reportId)
+        if (error) return res.status(404).send(data);
+        res.status(204).send();
     } catch (error) {
       res.status(404).send(error);
     }
   }
+  
 }
 
 module.exports = ReportsController;
+
+
