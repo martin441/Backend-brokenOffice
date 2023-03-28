@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const pointSchema = require("./pointSchema")
 
 const office = new Schema({
   name: {
@@ -19,10 +20,11 @@ const office = new Schema({
       type: String
     }
   },
-  coordinates: {
-    type: String,
+  location: {
+    type: pointSchema,
     required: true,
-  },
+    index: '2dsphere'
+  }
 });
 
 const Office = mongoose.model("Office", office);

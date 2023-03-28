@@ -1,10 +1,10 @@
-const AdminServices = require("../services/admin");
+const CollaboratorsServices = require("../services/collaborators");
 
-class UserController {
+class CollaboratorsController {
   static async allUsers(req, res, next) {
     try {
-      const { error, data } = await AdminServices.fetchAllUsers();
-      if (error) return res.status(404).send(data);     
+      const { error, data } = await CollaboratorsServices.fetchAllUsers();
+      if (error) return res.status(404).send(data);
       res.status(200).send(data);
     } catch (error) {
       res.status(404).send(error);
@@ -12,22 +12,21 @@ class UserController {
   }
   static async createUser(req, res, next) {
     try {
-      const userExists = await AdminServices.findUser(req.body.email);
+      const userExists = await CollaboratorsServices.findUser(req.body.email);
       if (!userExists.error && userExists.data.length)
         return res.status(400).send("That user already exists");
 
-      const { error, data } = await AdminServices.createNewUser(req.body);
+      const { error, data } = await CollaboratorsServices.createNewUser(req.body);
       if (error) return res.status(404).send(data);
       res.status(201).send();
     } catch (error) {
       res.status(404).send(error);
     }
-  }  
+  }
   static async editUserType(req, res, next) {
-    const {email, type} = req.body;
-    console.log(email, type)
+    const { email, type } = req.body;
     try {
-      const { error, data }  = await AdminServices.editType(email, type);      
+      const { error, data } = await CollaboratorsServices.editType(email, type);
       if (error) return res.status(404).send(data);
       res.send("Updated successfully");
     } catch (error) {
@@ -35,10 +34,9 @@ class UserController {
     }
   }
   static async deleteUser(req, res, next) {
-    const {email} = req.body;
+    const { userEmail } = req.params;
     try {
-      const { error, data }  = await AdminServices.removeUser(email); 
-        console.log(data)
+      const { error, data } = await CollaboratorsServices.removeUser(userEmail);
       if (error) return res.status(404).send(data);
       res.send("Deleted successfully");
     } catch (error) {
@@ -47,4 +45,4 @@ class UserController {
   }
 }
 
-module.exports = UserController;
+module.exports = CollaboratorsController;

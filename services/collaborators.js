@@ -1,6 +1,6 @@
 const { User } = require("../models");
 
-class AdminServices {
+class CollaboratorsServices {
   static async fetchAllUsers() {
     try {
       const users = await User.find({});
@@ -43,4 +43,4 @@ class AdminServices {
   }
 }
 
-module.exports = AdminServices;
+module.exports = CollaboratorsServices;
