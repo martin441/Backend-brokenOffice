@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const CollaboratorsController = require("../controllers/collaborators");
-const { validateOmega } = require("../middleware/validateOmega");
-const { validateAlpha } = require("../middleware/validateAlpha");
+const { validateAlpha, validateOmega} = require("../middleware");
+
 
 router.get("/users", validateAlpha, CollaboratorsController.allUsers);
 router.post("/create/user", validateAlpha, CollaboratorsController.createUser);
