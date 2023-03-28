@@ -22,7 +22,6 @@ router.get("/probando", async (req, res) => {
                 distanceMultiplier: 0.001,
             }
         }]);
-
         console.log(algo);
         res.send(algo)
     } catch (error) {
