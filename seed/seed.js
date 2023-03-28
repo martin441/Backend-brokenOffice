@@ -1,6 +1,12 @@
 const { db_sync } = require("../config/db");
 const { User, Office } = require("../models");
 
+async function addUsers(users) {
+  for (const user of users) {
+    await User.create(user);
+  }
+}
+
 const seedUserOffices = async () => {
   const users = [
     {
@@ -10,6 +16,11 @@ const seedUserOffices = async () => {
       role: "God",
       password: "12345",
       email: "superadmin@globant.com",
+      addressName: "",
+      addressCoor: {
+        type: "Point",
+        coordinates: [-62.261036, -38.709426],
+      },
     },
     {
       name: "Admin",
@@ -18,6 +29,11 @@ const seedUserOffices = async () => {
       role: "admin",
       password: "12345",
       email: "admin@globant.com",
+      addressName: "",
+      addressCoor: {
+        type: "Point",
+        coordinates: [-60.27640501877847, -38.38154544145026],
+      },
     },
     {
       name: "Service",
@@ -26,6 +42,11 @@ const seedUserOffices = async () => {
       role: "Staff",
       password: "12345",
       email: "service@globant.com",
+      addressName: "",
+      addressCoor: {
+        type: "Point",
+        coordinates: [-58.491312221578376,-34.55325568133285],
+      },
     },
     {
       name: "Standard",
@@ -34,6 +55,11 @@ const seedUserOffices = async () => {
       role: "Staff",
       password: "12345",
       email: "standard@globant.com",
+      addressName: "",
+      addressCoor: {
+        type: "Point",
+        coordinates: [-31.400418168552886, -64.22622374454102],
+      },
     },
   ];
 
@@ -45,7 +71,10 @@ const seedUserOffices = async () => {
         zip: "B8000DCA",
         floor: "9° piso",
       },
-      coordinates: "-38.71961235719416, -62.26707802202223",
+      location: {
+        type: "Point",
+        coordinates: [-62.26707802202223, -38.71961235719416],
+      },
     },
 
     {
@@ -55,7 +84,10 @@ const seedUserOffices = async () => {
         zip: "C1001ADA",
         floor: "",
       },
-      coordinates: "-34.595164849778385, -58.37107472919439",
+      location: {
+        type: "Point",
+        coordinates: [-58.37107472919439, -34.595164849778385],
+      },
     },
 
     {
@@ -65,7 +97,10 @@ const seedUserOffices = async () => {
         zip: "5003",
         floor: "",
       },
-      coordinates: "-31.400418168552886, -64.22622374454102",
+      location: {
+        type: "Point",
+        coordinates: [-64.22622374454102, -31.400418168552886],
+      },
     },
 
     {
@@ -75,7 +110,10 @@ const seedUserOffices = async () => {
         zip: "B1902CLX",
         floor: "1° piso",
       },
-      coordinates: "-34.909168831879626, -57.954606433887214",
+      location: {
+        type: "Point",
+        coordinates: [-57.954606433887214, -34.909168831879626],
+      },
     },
 
     {
@@ -85,7 +123,10 @@ const seedUserOffices = async () => {
         zip: "B7600FXR",
         floor: "",
       },
-      coordinates: "-38.01079581604551, -57.535591359322616",
+      location: {
+        type: "Point",
+        coordinates: [-57.535591359322616, -38.01079581604551],
+      },
     },
     {
       name: "Ushuaia",
@@ -94,7 +135,10 @@ const seedUserOffices = async () => {
         zip: "V9410",
         floor: "piso 5",
       },
-      coordinates: "-54.808711367401585, -68.31899351489317",
+      location: {
+        type: "Point",
+        coordinates: [-68.31899351489317, -54.808711367401585],
+      },
     },
     {
       name: "Tucumán",
@@ -103,7 +147,10 @@ const seedUserOffices = async () => {
         zip: "T4107",
         floor: "",
       },
-      coordinates: "-26.799265029344973, -65.30305880116478",
+      location: {
+        type: "Point",
+        coordinates: [-65.30305880116478, -26.799265029344973],
+      },
     },
     {
       name: "Tandil",
@@ -112,7 +159,10 @@ const seedUserOffices = async () => {
         zip: "B7000",
         floor: "",
       },
-      coordinates: "-37.32496190735314, -59.13066882171529",
+      location: {
+        type: "Point",
+        coordinates: [-59.13066882171529, -37.32496190735314],
+      },
     },
     {
       name: "Rosario",
@@ -121,7 +171,10 @@ const seedUserOffices = async () => {
         zip: "S2000QGR",
         floor: "",
       },
-      coordinates: "-26.799240489041185, -65.30289562719635",
+      location: {
+        type: "Point",
+        coordinates: [-65.30289562719635, -26.799240489041185],
+      },
     },
     {
       name: "Rosario",
@@ -130,7 +183,10 @@ const seedUserOffices = async () => {
         zip: "S2000QGR",
         floor: "",
       },
-      coordinates: "-32.926363502244996, -60.66068869022631",
+      location: {
+        type: "Point",
+        coordinates: [-60.66068869022631, -32.926363502244996],
+      },
     },
     {
       name: "Resistencia",
@@ -139,7 +195,10 @@ const seedUserOffices = async () => {
         zip: "H3500CAD",
         floor: "5° piso",
       },
-      coordinates: "-27.461998145014306, -58.97729540815109",
+      location: {
+        type: "Point",
+        coordinates: [-58.97729540815109, -27.461998145014306],
+      },
     },
     {
       name: "Mendoza",
@@ -148,7 +207,10 @@ const seedUserOffices = async () => {
         zip: "M5500GGF",
         floor: "5° piso",
       },
-      coordinates: "-32.89242561164258, -68.8432275172835",
+      location: {
+        type: "Point",
+        coordinates: [-68.8432275172835, -32.89242561164258],
+      },
     },
     {
       name: "Mendoza",
@@ -157,7 +219,10 @@ const seedUserOffices = async () => {
         zip: "M5500GGF",
         floor: "1° piso",
       },
-      coordinates: "-32.88828635707043, -68.83951027310734",
+      location: {
+        type: "Point",
+        coordinates: [-68.83951027310734, -32.88828635707043],
+      },
     },
     {
       name: "Mendoza",
@@ -166,26 +231,17 @@ const seedUserOffices = async () => {
         zip: "M5505",
         floor: "1° piso",
       },
-      coordinates: "-32.97147011018864, -68.8757536732037",
+      location: {
+        type: "Point",
+        coordinates: [-68.8757536732037, -32.97147011018864],
+      },
     },
   ];
 
-  const test = {
-    name: "Super Admin",
-    lastName: "Owner",
-    type: "superAdmin",
-    role: "God",
-    password: "12345",
-    email: "superadmin66@globant.com",
-  }
-
   try {
     await db_sync();
-    /* users.forEach(async (item) => {
-      return await User.create(item);
-    })
-    await Office.insertMany(offices); */
-    await User.create(test)
+    await addUsers(users);
+    await Office.insertMany(offices);
     process.exit();
   } catch (error) {
     console.error(error);
