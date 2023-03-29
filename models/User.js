@@ -62,6 +62,7 @@ const user = new Schema({
   },
   activeReports: {
     type: Number,
+    default: 0
   },
 });
 

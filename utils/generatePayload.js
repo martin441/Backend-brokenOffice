@@ -12,7 +12,7 @@ function generatePayload(data) {
     geoLocation: data.geoLocation || {},
     picture: data.picture || "",
     office: data.office || "",
-    reportHistory: data.reportHistory || "",
+    activeReports: data.activeReports || 0,
   };
   const token = generateToken(payload);
   return { token, payload };
