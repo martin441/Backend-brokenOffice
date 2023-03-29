@@ -12,7 +12,6 @@ const {
   GC_AUTH_PROVIDER_X509_CERT_URL,
   GC_CLIENT_X509_CERT_URL,
 } = process.env;
-const path = require("path");
 
 const { Storage } = Cloud;
 

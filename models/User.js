@@ -61,9 +61,8 @@ const user = new Schema({
     ref: "Office",
   },
   activeReports: {
-    type: Number
-  }
-
+    type: Number,
+  },
 });
 
 user.methods.encryptPassword = function (password, salt) {
