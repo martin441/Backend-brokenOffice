@@ -1,5 +1,6 @@
 const UserServices = require("../services/user");
 const { generatePayload } = require("../utils/generatePayload");
+const { uploadImage } = require("../utils/uploadImg");
 
 class UserController {
   static async getProfile(req, res, next) {
@@ -71,6 +72,23 @@ class UserController {
 
   static async logoutUser(req, res, next) {
     res.clearCookie("token").status(204).send();
+  }
+
+  static async editPicture(req, res, next) {
+    const { email } = req.user;
+    const myFile = req.file
+    try {
+        const imageUrl = await uploadImage(myFile)
+        const { error, data } = await UserServices.updateProfile({picture: imageUrl}, email);
+        if (error) {
+          return res.status(404).send(data);
+        }
+        const { token, payload } = generatePayload(data);
+        res.cookie("token", token);
+        res.status(201).send(payload);
+    } catch (error) {
+      res.status(404).send(error);
+    }
   }
 }
 

@@ -10,6 +10,8 @@ router.put("/edit/profile", validateUser, UserController.editProfile)
 
 router.put("/edit/password", validateUser, UserController.editPassword)
 
+router.post("/edit/picture", validateUser, UserController.editPicture)
+
 router.post("/login", UserController.login)
 
 router.get("/me", validateUser, UserController.userMe);
