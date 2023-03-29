@@ -64,6 +64,9 @@ const user = new Schema({
     type: mongoose.ObjectId,
     ref: "Report",
   }],
+  activeReports: {
+    type: Number
+  }
 });
 
 user.methods.encryptPassword = function (password, salt) {
