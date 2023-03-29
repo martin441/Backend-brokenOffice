@@ -1,9 +1,11 @@
-const { User, Report } = require("../models");
+const { User, Report, Office} = require("../models");
 
 class ReportsServices {
   static async getAllReports() {
     try {
-      const allReports = await Report.find({}).populate("issuer").populate("solver");
+      const allReports = await Report.find({})
+        .populate("issuer")
+        .populate("solver");
       return { error: false, data: allReports };
     } catch (error) {
       return { error: true, data: error };
@@ -11,8 +13,10 @@ class ReportsServices {
   }
 
   static async getReports(userId, role) {
-    try {           
-      const allServiceReports = await Report.find({ [role]: userId });  
+    try {
+      const allServiceReports = await Report.find({ [role]: userId })
+        .populate("issuer")
+        .populate("solver");
       return { error: false, data: allServiceReports };
     } catch (error) {
       return { error: true, data: error };
@@ -22,8 +26,11 @@ class ReportsServices {
   static async createNewReport(report, id) {
     try {
       const newReport = await Report.create(report);
-      newReport.issuer = id; 
+      newReport.issuer = id;
       newReport.save();
+      const office = await Office.findById(newReport.office)
+      office.openReports += 1
+      office.save();
       return { error: false, data: newReport };
     } catch (error) {
       return { error: true, data: error };
@@ -40,6 +47,11 @@ class ReportsServices {
           new: true,
         }
       );
+      if (status === "closed"){
+        const office = await Office.findById(reportStateUpdated.office)
+        office.openReports -= 1
+        office.save();
+      }
       return { error: false, data: reportStateUpdated };
     } catch (error) {
       return { error: true, data: error };

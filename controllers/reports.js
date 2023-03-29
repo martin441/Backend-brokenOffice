@@ -33,7 +33,7 @@ class ReportsController {
       const report = req.body;          
       const { error, data } = await ReportsServices.createNewReport(report, user.data._id);
       if (error) return res.status(404).send(data);
-      res.status(201).send("User created successfully");
+      res.status(201).send("Report created successfully");
     } catch (error) {
       res.status(404).send(error);
     }
@@ -47,7 +47,7 @@ class ReportsController {
         status
       );
       if (error) return res.status(404).send(data);
-      res.status(200).send("User updated successfully");
+      res.status(200).send("Report updated successfully");
     } catch (error) {
       res.status(404).send(error);
     }
