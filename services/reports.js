@@ -9,9 +9,10 @@ class ReportsServices {
       return { error: true, data: error };
     }
   }
-  static async getReports(userId, type) {
-    try {
-      const allServiceReports = await Report.find({[type]: userId});
+
+  static async getReports(userId, role) {
+    try {      
+      const allServiceReports = await Report.find({ [role]: userId });    
       return { error: false, data: allServiceReports };
     } catch (error) {
       return { error: true, data: error };
@@ -26,17 +27,23 @@ class ReportsServices {
       return { error: true, data: error };
     }
   }
-  static async editStateReport(reportId, state) {
+
+  static async editStateReport(reportId, status) {
     try {
-      const reportStateUpdated = await Report.findByIdAndUpdate(reportId, {state}, {
-        runValidators: true,
-        new: true,
-      });
+      const reportStateUpdated = await Report.findByIdAndUpdate(
+        reportId,
+        { status },
+        {
+          runValidators: true,
+          new: true,
+        }
+      );
       return { error: false, data: reportStateUpdated };
     } catch (error) {
       return { error: true, data: error };
     }
   }
+
   static async deleteReport(reportId) {
     try {
       const deletedReport = await Report.findByIdAndRemove(reportId);
@@ -48,5 +55,3 @@ class ReportsServices {
 }
 
 module.exports = ReportsServices;
-
-

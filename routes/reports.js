@@ -13,7 +13,7 @@ router.get("/service", validateBeta, ResportsController.viewReports);
 router.get("/history", validateGama, ResportsController.viewReports);
 
 //Create new report (standard)--> Admins pueden crear?
-// router.post("/create",  ResportsController.createReport);
+router.post("/create", validateGama,  ResportsController.createReport);
 
 //Edit report state (superAdmin, admin, service)
 router.put("/edit/state/:reportId", ResportsController.editReportState);
