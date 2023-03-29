@@ -15,11 +15,15 @@ class ReportsController {
   }
   static async viewReports(req, res, next) {
     try {
-        const type = req.user.type === BETA ? "solver" : "issuer";
-        const user = await UserServices.findOneByEmail(req.user.email);
-        const {error, data} = await ReportsServices.getReports(user._id, type)
-        if (error) return res.status(404).send(data);
-        res.status(200).send(data);
+      const role = req.user.type === BETA ? "solver" : "issuer";
+      const user = await UserServices.findOneByEmail(req.user.email);
+      const { error, data } = await ReportsServices.getReports(
+        user.data._id,
+        role
+      );
+
+      if (error) return res.status(404).send(data);
+      res.status(200).send(data);
     } catch (error) {
       res.status(404).send(error);
     }
@@ -28,7 +32,7 @@ class ReportsController {
     try {
       const user = await UserServices.findOneByEmail(req.user.email);
       const report = req.body;
-      report.issuer = user.data._id;
+      report.issuer = user.data._id;      
       const { error, data } = await ReportsServices.createNewReport(report);
       if (error) return res.status(404).send(data);
       res.status(201).send(data);
@@ -38,11 +42,14 @@ class ReportsController {
   }
   static async editReportState(req, res, next) {
     try {
-        const {reportId} = req.params;
-        const state = req.body; 
-        const {error,data} = await ReportsServices.editStateReport(reportId, state)
-        if (error) return res.status(404).send(data);
-        res.status(200).send(data);
+      const { reportId } = req.params;
+      const { status } = req.body;
+      const { error, data } = await ReportsServices.editStateReport(
+        reportId,
+        status
+      );
+      if (error) return res.status(404).send(data);
+      res.status(200).send(data);
     } catch (error) {
       res.status(404).send(error);
     }
@@ -55,17 +62,14 @@ class ReportsController {
   }
   static async deleteReport(req, res, next) {
     try {
-        const {reportId} = req.params;
-        const {error, data} = await ReportsServices.deleteReport(reportId)
-        if (error) return res.status(404).send(data);
-        res.status(204).send();
+      const { reportId } = req.params;
+      const { error, data } = await ReportsServices.deleteReport(reportId);
+      if (error) return res.status(404).send(data);
+      res.status(204).send();
     } catch (error) {
       res.status(404).send(error);
     }
   }
-  
 }
 
 module.exports = ReportsController;
-
-
