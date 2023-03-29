@@ -36,19 +36,6 @@ const seedUserOffices = async () => {
       },
     },
     {
-      name: "Service",
-      lastName: "Staff",
-      type: "service",
-      role: "Staff",
-      password: "12345",
-      email: "service@globant.com",
-      addressName: "",
-      addressCoor: {
-        type: "Point",
-        coordinates: [-58.491312221578376,-34.55325568133285],
-      },
-    },
-    {
       name: "Standard",
       lastName: "Staff",
       type: "standard",
@@ -238,10 +225,37 @@ const seedUserOffices = async () => {
     },
   ];
 
+  const service = {
+    name: "Service",
+    lastName: "Staff",
+    type: "service",
+    role: "Staff",
+    password: "12345",
+    email: "servic@globant.com",
+    addressName: "",
+    addressCoor: {
+      type: "Point",
+      coordinates: [-58.491312221578376, -34.55325568133285],
+    },
+    office: "",
+  };
+
   try {
     await db_sync();
+    let count = 0;
+    for (let i = 0; i < offices.length; i++) {
+      const office = await Office.create(offices[i]);
+      service.office = office._id;
+      count += 1;
+      service.email = `service${count}@globant.com`;
+      service.name = `Service${count}`;
+      await User.create(service);
+      count += 1;
+      service.email = `service${count}@globant.com`;
+      service.name = `Service${count}`;
+      await User.create(service);
+    }
     await addUsers(users);
-    await Office.insertMany(offices);
     process.exit();
   } catch (error) {
     console.error(error);
