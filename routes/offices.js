@@ -1,6 +1,6 @@
 const express = require("express");
 const OfficesController = require("../controllers/offices");
-const { validateAlpha } = require("../middleware/validateAlpha");
+const { validateAlpha} = require("../middleware");
 const router = express.Router();
 
 
