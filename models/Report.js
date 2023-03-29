@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const { User } = require("./User");
 const pointSchema = require("./pointSchema");
 
 const report = new Schema({
   issuer: {
     type: mongoose.ObjectId,
-    ref: "User",
-    required: true,
+    ref: "User",    
   },
   solver: {
     type: mongoose.ObjectId,
@@ -33,14 +33,14 @@ const report = new Schema({
   },
   status: {
     type: String,
-    enum: ["issued", "assigned", "in progress", "closed"],
+    enum: ["issued", "in progress", "closed"],
     default: "issued",
   },
   messages: {
     type: Array,
   },
-  tags: {
-    type: Array,
+  tag: {
+    type: String,
     required: false,
   },
 });

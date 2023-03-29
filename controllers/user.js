@@ -7,11 +7,8 @@ class UserController {
     const { email } = req.user;
     try {
       const { error, data } = await UserServices.findOneByEmail(email);
-      if (error) {
-        return res.status(404).send(data);
-      }
-
-      res.send(req.user);
+      if (error) return res.status(404).send(data);
+      res.status(200).send(req.user);
     } catch (error) {
       res.status(404).send(error);
     }
@@ -26,7 +23,7 @@ class UserController {
       }
       const { token, payload } = generatePayload(data);
       res.cookie("token", token);
-      res.status(201).send(payload);
+      res.status(200).send(payload);
     } catch (error) {
       res.status(404).send(error);
     }
@@ -44,7 +41,7 @@ class UserController {
         user.data
       );
       if (updatedUser.error) return res.status(404).send(updatedUser.data);
-      res.status(201).send("Password updated");
+      res.status(200).send("Password updated successfully");
     } catch (error) {
       res.status(404).send(error);
     }
@@ -60,14 +57,14 @@ class UserController {
       if (!isValid) return res.status(401).send("Invalid credentials");
       const { token, payload } = generatePayload(data);
       res.cookie("token", token);
-      res.send(payload);
+      res.status(200).send(payload);
     } catch (error) {
       res.status(404).send(error);
     }
   }
 
   static async userMe(req, res, next) {
-    res.send(req.user);
+    res.status(200).send(req.user);
   }
 
   static async logoutUser(req, res, next) {
