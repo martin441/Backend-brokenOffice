@@ -33,7 +33,7 @@ const report = new Schema({
   },
   status: {
     type: String,
-    enum: ["issued", "assigned", "in progress", "closed"],
+    enum: ["issued", "in progress", "closed"],
     default: "issued",
   },
   messages: {

@@ -24,6 +24,10 @@ const office = new Schema({
     type: pointSchema,
     required: true,
     index: '2dsphere'
+  },
+  openReports:{
+    type: Number,
+    default: 0
   }
 });
 
