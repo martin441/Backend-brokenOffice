@@ -3,7 +3,7 @@ const { User, Report } = require("../models");
 class ReportsServices {
   static async getAllReports() {
     try {
-      const allReports = await Report.find({});
+      const allReports = await Report.find({}).populate("issuer").populate("solver");
       return { error: false, data: allReports };
     } catch (error) {
       return { error: true, data: error };
@@ -11,17 +11,19 @@ class ReportsServices {
   }
 
   static async getReports(userId, role) {
-    try {      
-      const allServiceReports = await Report.find({ [role]: userId });    
+    try {           
+      const allServiceReports = await Report.find({ [role]: userId });  
       return { error: false, data: allServiceReports };
     } catch (error) {
       return { error: true, data: error };
     }
   }
 
-  static async createNewReport(report) {
+  static async createNewReport(report, id) {
     try {
       const newReport = await Report.create(report);
+      newReport.issuer = id; 
+      newReport.save();
       return { error: false, data: newReport };
     } catch (error) {
       return { error: true, data: error };

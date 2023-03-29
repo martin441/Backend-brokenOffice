@@ -14,11 +14,11 @@ class CollaboratorsController {
     try {
       const userExists = await CollaboratorsServices.findUser(req.body.email);
       if (!userExists.error && userExists.data.length)
-        return res.status(400).send("That user already exists");
+        return res.status(404).send("That user already exists");
 
       const { error, data } = await CollaboratorsServices.createNewUser(req.body);
       if (error) return res.status(404).send(data);
-      res.status(201).send();
+      res.status(201).send("User created successfully");
     } catch (error) {
       res.status(404).send(error);
     }
@@ -28,7 +28,7 @@ class CollaboratorsController {
     try {
       const { error, data } = await CollaboratorsServices.editType(email, type);
       if (error) return res.status(404).send(data);
-      res.send("Updated successfully");
+      res.status(200).send("User updated successfully");
     } catch (error) {
       res.status(404).send(error);
     }
@@ -38,7 +38,7 @@ class CollaboratorsController {
     try {
       const { error, data } = await CollaboratorsServices.removeUser(userEmail);
       if (error) return res.status(404).send(data);
-      res.send("Deleted successfully");
+      res.status(204).send();
     } catch (error) {
       res.status(404).send(error);
     }

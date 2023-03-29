@@ -3,7 +3,7 @@ const { User, Office } = require("../models");
 class UserServices {
   static async findOneByEmail(email) {
     try {
-      const singleUser = await User.findOne({ email }).populate("office");
+      const singleUser = await User.findOne({ email }).populate("office");      
       return { error: false, data: singleUser };
     } catch (error) {
       return { error: true, data: error };

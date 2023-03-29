@@ -1,10 +1,10 @@
 require("dotenv").config();
 const { ALPHA, OMEGA } = process.env;
 
-function validateAlpha(req, res, next) {
+function validateOA(req, res, next) {
   const user = req.user;
   if (user.type !== ALPHA && user.type !== OMEGA) return res.status(401).send("Invalid credentials");
   next();
 }
 
-module.exports = { validateAlpha };
+module.exports = { validateOA };
