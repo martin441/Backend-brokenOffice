@@ -254,6 +254,10 @@ const seedUserOffices = async () => {
       service.email = `service${count}@globant.com`;
       service.name = `Service${count}`;
       await User.create(service);
+      count += 1;
+      service.email = `service${count}@globant.com`;
+      service.name = `Service${count}`;
+      await User.create(service);
     }
     await addUsers(users);
     process.exit();
