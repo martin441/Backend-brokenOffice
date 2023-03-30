@@ -33,7 +33,7 @@ npm run seed
 npm run server
 ```
 
-## Whats happens here?
+## Next steps
 
 We put the server online on port 3001 and it`s ready to recieve requests
 
