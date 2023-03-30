@@ -1,7 +1,7 @@
 # About the project :rocket:
 
 
-Name: Broken Office - Globant 
+Name: Broken Office - Globant <br />
 Backend team: Pedro Fanelli, Jessica Yu, Maria Cruz Schena.<br />
 Frontend team: Martin Machado, Julian Rinaudo, Julieta Magnago.<br />
 
