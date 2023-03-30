@@ -32,3 +32,13 @@ router.get("/probando", async (req, res) => {
 })
 
 module.exports = router;
+
+/* 
+    {
+    "name": "Name",
+    "lastName": "Last name",    
+    "role": "Developer",
+    "addressName": "Some adress 236",   
+    "office": "6425a5a4ace63680769c24e0"    
+}
+*/
