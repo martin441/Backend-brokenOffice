@@ -11,7 +11,7 @@ function generatePayload(data) {
     addressCoor: data.addressCoor || {},
     geoLocation: data.geoLocation || {},
     picture: data.picture || "",
-    office: data.office || "",
+    office: data.office || {},
     activeReports: data.activeReports || 0,
   };
   const token = generateToken(payload);

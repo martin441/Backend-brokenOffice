@@ -1,5 +1,6 @@
 const CollaboratorsServices = require("../services/collaborators");
 const UserServices = require("../services/user");
+require("dotenv").config();
 const { ALPHA, ALPHAT, OMEGA } = process.env;
 
 class CollaboratorsController {
