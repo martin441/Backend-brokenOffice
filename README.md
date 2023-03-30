@@ -2,8 +2,8 @@
 
 
 Name: Broken Office - Globant 
-Backend team: Pedro Fanelli, Jessica Yu, Maria Cruz Schena.
-Frontend team: Martin Machado, Julian Rinaudo, Julieta Magnago.
+Backend team: Pedro Fanelli, Jessica Yu, Maria Cruz Schena.<br />
+Frontend team: Martin Machado, Julian Rinaudo, Julieta Magnago.<br />
 
 # Backend
 
