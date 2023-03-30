@@ -1,4 +1,6 @@
 const CollaboratorsServices = require("../services/collaborators");
+const UserServices = require("../services/user");
+const { ALPHA, ALPHAT, OMEGA } = process.env;
 
 class CollaboratorsController {
   static async allUsers(req, res, next) {
@@ -12,6 +14,9 @@ class CollaboratorsController {
   }
   static async createUser(req, res, next) {
     try {
+      if(req.user.type === ALPHA && req.body.type === ALPHAT){
+        return res.status(401).send("Invalid credentials")
+      }
       const userExists = await CollaboratorsServices.findUser(req.body.email);
       if (!userExists.error && userExists.data.length)
         return res.status(404).send("That user already exists");
@@ -36,6 +41,13 @@ class CollaboratorsController {
   static async deleteUser(req, res, next) {
     const { userEmail } = req.params;
     try {
+      const user = await UserServices.findOneByEmail(userEmail)
+      if (req.user.type === ALPHA && user.data.type === ALPHA){
+        return res.status(401).send("Invalid credentials")
+      }
+      if (user.data.type === OMEGA){
+        return res.status(401).send("Super Admin cannot be deleted")
+      }
       const { error, data } = await CollaboratorsServices.removeUser(userEmail);
       if (error) return res.status(404).send(data);
       res.status(204).send();
