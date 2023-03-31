@@ -5,10 +5,16 @@ const { BETA } = process.env;
 class ReportsServices {
   static async getAllReports() {
     try {
-      const allReports = await Report.find({})
-        .populate("issuer")
-        .populate("solver");
+      const allReports = await Report.find({}).populate(["issuer", "solver"])
       return { error: false, data: allReports };
+    } catch (error) {
+      return { error: true, data: error };
+    }
+  }
+  static async getOneReport(id) {
+    try {
+      const report = await Report.findById(id).populate(["issuer", "solver", "office"])
+      return { error: false, data: report };
     } catch (error) {
       return { error: true, data: error };
     }
@@ -16,9 +22,7 @@ class ReportsServices {
 
   static async getReports(userId, role) {
     try {
-      const allServiceReports = await Report.find({ [role]: userId })
-        .populate("issuer")
-        .populate("solver");
+      const allServiceReports = await Report.find({ [role]: userId }).populate(["issuer", "solver"]);
       return { error: false, data: allServiceReports };
     } catch (error) {
       return { error: true, data: error };
@@ -37,6 +41,9 @@ class ReportsServices {
       const updatedService = await User.findById(serviceId);
       updatedService.activeReports += 1;
       updatedService.save();
+      const updatedStandard = await User.findById(userId);
+      updatedStandard.activeReports += 1;
+      updatedStandard.save();
       return { error: false, data: newReport };
     } catch (error) {
       return { error: true, data: error };
@@ -60,6 +67,9 @@ class ReportsServices {
         const updatedService = await User.findById(reportStateUpdated.solver);
         updatedService.activeReports -= 1;
         updatedService.save();
+        const updatedStandard = await User.findById(reportStateUpdated.issuer);
+        updatedStandard.activeReports -= 1;
+        updatedStandard.save();
       }
       return { error: false, data: reportStateUpdated };
     } catch (error) {
@@ -76,6 +86,9 @@ class ReportsServices {
       const updatedService = await User.findById(deletedReport.solver.toString());
       updatedService.activeReports -= 1;
       updatedService.save();
+      const updatedStandard = await User.findById(deletedReport.issuer.toString());
+      updatedStandard.activeReports -= 1;
+      updatedStandard.save();
       return { error: false, data: deletedReport };
     } catch (error) {
       return { error: true, data: error };
