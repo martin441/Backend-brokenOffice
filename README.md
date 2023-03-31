@@ -41,6 +41,11 @@ We put the server online on port 3001 and it`s ready to recieve requests
 http://localhost:3001/`
 ```
 
+Database schemas
+
+```
+https://dbdiagram.io/d/6426d6e55758ac5f1725c2a6`
+```
 
 
 API Documentation
