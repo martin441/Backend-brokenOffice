@@ -1,5 +1,6 @@
 const ReportsServices = require("../services/reports");
 const UserServices = require("../services/user");
+const { sendEmail } = require("../utils/nodemailer");
 require("dotenv").config();
 const { BETA } = process.env;
 
@@ -40,6 +41,8 @@ class ReportsController {
         service.data._id
       );
       if (error) return res.status(404).send(data);
+      const reportPop = await data.populate(['issuer', 'solver', 'office'])
+      sendEmail(reportPop, true)
       res.status(201).send("Report created successfully");
     } catch (error) {
       res.status(404).send(error);
@@ -98,6 +101,19 @@ class ReportsController {
       res.status(404).send(error);
     }
   }
+
+  static async shareReport(req, res, next) {
+    try {
+      const { reportId, emailTo } = req.body;
+      const { error, data } = await ReportsServices.getOneReport(reportId);
+      if (error) return res.status(404).send(data);
+      sendEmail(data, false, emailTo)
+      res.status(200).send();
+    } catch (error) {
+      res.status(404).send(error);
+    }
+  }
+
 }
 
 module.exports = ReportsController;

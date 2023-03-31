@@ -5,8 +5,7 @@ const officesRouter = require("./offices");
 const collaboratorsRouter = require("./collaborators");
 const reportsRouter = require("./reports");
 const { validateUser } = require("../middleware/auth");
-const { Office } = require("../models");
-
+const {sendEmail} = require("../utils/nodemailer");
 
 router.use("/user", userRouter);
 router.use("/offices", validateUser, officesRouter);
