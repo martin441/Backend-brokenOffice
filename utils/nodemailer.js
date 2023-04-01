@@ -11,9 +11,27 @@ async function sendEmail (report, op, shareMail) {
     const source = fs.readFileSync(filePath, 'utf-8').toString();
     const template = handlebars.compile(source);
     const replacements = { 
-        name: `${report.issuer.name}`
+      order: `${report._id}`,
+      date: `${report.date}`,
+      issuer: `${report.issuer.name}`,
+      solver: `${report.solver.name}`,
+      office:`${report.office.address.street} - ${report.office.address.floor} floor`,
+      status:`${report.status}`,
     }
     const htmlToSend = template(replacements);
+
+    const filePath2 = path.join(__dirname, '../assets/index2.html');
+    const source2 = fs.readFileSync(filePath2, 'utf-8').toString();
+    const template2 = handlebars.compile(source2);
+    const replacements2 = { 
+      order: `${report._id}`,
+      date: `${report.date}`,
+      issuer: `${report.issuer.name}`,
+      solver: `${report.solver.name}`,
+      office:`${report.office.address.street} - ${report.office.address.floor} floor`,
+      status:`${report.status}`,
+    }
+    const htmlToSend2 = template2(replacements2);
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -29,9 +47,7 @@ async function sendEmail (report, op, shareMail) {
       from: op ? NM_EMAIL : `${report.issuer.email}`,
       to: op ? `${report.issuer.email}` : shareMail,
       subject: `Broken Office Report: ${report.title}`,
-      html: op ? htmlToSend : `<h1>GRACIAS POR SU COMPRA</h1>
-      <p>TOTAL ABONADO: </p>
-      <p>DESTINO : </p>`
+      html: op ? htmlToSend : htmlToSend2
     });
 
     return sended;
