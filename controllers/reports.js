@@ -33,7 +33,7 @@ class ReportsController {
       const user = await UserServices.findOneByEmail(req.user.email);
       if (user.error) return res.status(404).send(user.data);
       const report = req.body;
-      const service = await ReportsServices.selectService(report.office)
+      const service = await ReportsServices.selectService(report.office, user.data._id)
       if (service.error) return res.status(404).send(service.data);
       const { error, data } = await ReportsServices.createNewReport(
         report,
