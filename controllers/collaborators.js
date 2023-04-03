@@ -32,6 +32,8 @@ class CollaboratorsController {
   static async editUserType(req, res, next) {
     const { email, type } = req.body;
     try {
+      const updatedUser = await CollaboratorsServices.delegateReports(email);
+      if (updatedUser.error) return res.status(404).send(updatedUser.data);
       const { error, data } = await CollaboratorsServices.editType(email, type);
       if (error) return res.status(404).send(data);
       res.status(200).send("User updated successfully");

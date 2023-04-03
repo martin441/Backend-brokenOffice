@@ -1,4 +1,8 @@
-const { User } = require("../models");
+const { User, Report } = require("../models");
+const ReportsServices = require("./reports");
+const { selectService } = require("./reports");
+require("dotenv").config();
+const { BETA } = process.env;
 
 class CollaboratorsServices {
   static async fetchAllUsers() {
@@ -37,6 +41,27 @@ class CollaboratorsServices {
     try {      
       const removedUser = await User.deleteOne({ email });
       return { error: false, data: removedUser };
+    } catch (error) {
+      return { error: true, data: error };
+    }
+  }
+  static async delegateReports(email) {    
+    try {      
+      const user = await User.findOne({email})
+      if (user.activeReports && user.type === BETA) {
+        const reports = await Report.find({solver: user._id, status: { $in: ['issued', 'in progress'] }})
+        const newService = await ReportsServices.selectService(user.office, user._id)
+        if (newService.error) return res.status(404).send(newService.data);
+        for (let i = 0; i < reports.length; i++) {
+          reports[i].solver = newService.data._id
+          reports[i].save()
+          newService.data.activeReports += 1;
+          newService.data.save()
+          user.activeReports -= 1;
+          user.save();
+        }
+      }
+      return { error: false, data: user };
     } catch (error) {
       return { error: true, data: error };
     }

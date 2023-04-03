@@ -41,9 +41,6 @@ class ReportsServices {
       const updatedService = await User.findById(serviceId);
       updatedService.activeReports += 1;
       updatedService.save();
-      const updatedStandard = await User.findById(userId);
-      updatedStandard.activeReports += 1;
-      updatedStandard.save();
       return { error: false, data: newReport };
     } catch (error) {
       return { error: true, data: error };
@@ -52,6 +49,8 @@ class ReportsServices {
 
   static async editStateReport(reportId, status) {
     try {
+      const checkStatus = await Report.findById(reportId);
+      if (checkStatus.status === "closed") return { error: true, data: "Report already closed" };
       const reportStateUpdated = await Report.findByIdAndUpdate(
         reportId,
         { status },
@@ -67,9 +66,6 @@ class ReportsServices {
         const updatedService = await User.findById(reportStateUpdated.solver);
         updatedService.activeReports -= 1;
         updatedService.save();
-        const updatedStandard = await User.findById(reportStateUpdated.issuer);
-        updatedStandard.activeReports -= 1;
-        updatedStandard.save();
       }
       return { error: false, data: reportStateUpdated };
     } catch (error) {
@@ -86,9 +82,6 @@ class ReportsServices {
       const updatedService = await User.findById(deletedReport.solver.toString());
       updatedService.activeReports -= 1;
       updatedService.save();
-      const updatedStandard = await User.findById(deletedReport.issuer.toString());
-      updatedStandard.activeReports -= 1;
-      updatedStandard.save();
       return { error: false, data: deletedReport };
     } catch (error) {
       return { error: true, data: error };
@@ -111,12 +104,13 @@ class ReportsServices {
       return { error: true, data: error };
     }
   }
-  static async selectService(officeId) {
+  static async selectService(officeId, issuerId) {
     try {
       const allUsers = await User.find({ office: officeId });
       const service = allUsers
         .filter((user) => user.type === BETA)
         .sort((a, b) => a.activeReports - b.activeReports);
+      if (service[0]._id.toString() === issuerId.toString()) return { error: false, data: service[1] }
       return { error: false, data: service[0] };
     } catch (error) {
       return { error: true, data: error };

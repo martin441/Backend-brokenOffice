@@ -15,7 +15,7 @@ async function sendEmail (report, op, shareMail) {
       date: `${report.date}`,
       issuer: `${report.issuer.name}`,
       solver: `${report.solver.name}`,
-      office:`${report.office.address.street} - ${report.office.address.floor} floor`,
+      office:`${report.office.address.street} - ${report.office.address.floor}`,
       status:`${report.status}`,
     }
     const htmlToSend = template(replacements);
@@ -28,7 +28,7 @@ async function sendEmail (report, op, shareMail) {
       date: `${report.date}`,
       issuer: `${report.issuer.name}`,
       solver: `${report.solver.name}`,
-      office:`${report.office.address.street} - ${report.office.address.floor} floor`,
+      office:`${report.office.address.street} - ${report.office.address.floor}`,
       status:`${report.status}`,
     }
     const htmlToSend2 = template2(replacements2);
@@ -43,11 +43,18 @@ async function sendEmail (report, op, shareMail) {
       },
     });
 
+    const imgPath = path.join(__dirname, '../assets/greenbook-logo-7.jpg');
+
     const sended = await transporter.sendMail({
       from: op ? NM_EMAIL : `${report.issuer.email}`,
       to: op ? `${report.issuer.email}` : shareMail,
       subject: `Broken Office Report: ${report.title}`,
-      html: op ? htmlToSend : htmlToSend2
+      html: op ? htmlToSend : htmlToSend2,
+      attachments: [{
+        filename: 'greenbook-logo-7.jpg',
+        path: imgPath,
+        cid: 'unique@kreata.ee'
+      }],
     });
 
     return sended;
