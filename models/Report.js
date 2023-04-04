@@ -39,9 +39,10 @@ const report = new Schema({
   messages: {
     type: Array,
   },
-  tag: {
+  product: {
     type: String,
-    required: false,
+    enum: ["modem", "hdmi", "screen", "mobile", "notebook", "headset", "mouse", "chair", "keyboard", "notebook charger", "mobile charger", "port adapter"],
+    required: true,
   },
 });
 

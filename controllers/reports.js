@@ -45,6 +45,9 @@ class ReportsController {
       const user = await UserServices.findOneByEmail(req.user.email);
       if (user.error) return res.status(404).send(user.data);
       const report = req.body;
+      const checkReports = await ReportsServices.getReports(user.data._id, "issuer")
+      const found = checkReports.data.find((rep) => rep.product === report.product && rep.status !== "closed")
+      if (found) return res.status(404).send("Active report already exists with this product");
       const service = await ReportsServices.selectService(report.office, user.data._id)
       if (service.error) return res.status(404).send(service.data);
       const { error, data } = await ReportsServices.createNewReport(

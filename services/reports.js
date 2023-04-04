@@ -22,7 +22,7 @@ class ReportsServices {
 
   static async getReports(userId, role) {
     try {
-      const allServiceReports = await Report.find({ [role]: userId }).populate(["issuer", "solver"]);
+      const allServiceReports = await Report.find({ [role]: userId }).populate(["issuer", "solver", "office"]);
       return { error: false, data: allServiceReports };
     } catch (error) {
       return { error: true, data: error };
