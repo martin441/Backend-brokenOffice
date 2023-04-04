@@ -1,4 +1,4 @@
-const { User, Report, Office } = require("../models");
+const { User, Report, Office, Cache } = require("../models");
 require("dotenv").config();
 const { BETA } = process.env;
 
@@ -47,8 +47,8 @@ class ReportsServices {
     }
   }
 
-  static async setReportImg(imgUrl, reportId) {
-    try {
+  static async setReportImg(imgUrl) {
+    /* try {
       const report = await Report.findByIdAndUpdate(
         reportId,
         { image: imgUrl },
@@ -58,6 +58,12 @@ class ReportsServices {
         }
       );
       return { error: false, data: report };
+    } catch (error) {
+      return { error: true, data: error };
+    } */
+    try {
+      const cacheImg = await Cache.create({imgUrl})
+      return { error: false, data: cacheImg };
     } catch (error) {
       return { error: true, data: error };
     }

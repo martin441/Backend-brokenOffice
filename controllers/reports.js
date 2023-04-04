@@ -144,18 +144,14 @@ class ReportsController {
   }
 
   static async createReportImg(req, res, next) {
-    const { reportId } = req.params;
     const myFile = req.file;
     try {
       const imageUrl = await uploadImage(myFile);
-      const { error, data } = await ReportsServices.setReportImg(
-        imageUrl,
-        reportId
-      );
+      const { error, data } = await ReportsServices.setReportImg(imageUrl)
       if (error) {
         return res.status(404).send(data);
       }
-      res.status(201).send(data._id);
+      res.status(201).send(data.imgUrl);
     } catch (error) {
       res.status(404).send(error);
     }
