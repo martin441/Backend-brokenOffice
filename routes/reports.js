@@ -17,6 +17,8 @@ router.get("/history", ResportsController.viewReports);
 
 router.post("/create", ResportsController.createReport);
 
+router.post("/create/img/:reportId", ResportsController.createReportImg);
+
 router.put(
   "/edit/state/:reportId",
   validateOAB,
