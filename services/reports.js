@@ -47,6 +47,22 @@ class ReportsServices {
     }
   }
 
+  static async setReportImg(imgUrl, reportId) {
+    try {
+      const report = await Report.findByIdAndUpdate(
+        reportId,
+        { image: imgUrl },
+        {
+          runValidators: true,
+          new: true,
+        }
+      );
+      return { error: false, data: report };
+    } catch (error) {
+      return { error: true, data: error };
+    }
+  }
+
   static async editStateReport(reportId, status) {
     try {
       const checkStatus = await Report.findById(reportId);
