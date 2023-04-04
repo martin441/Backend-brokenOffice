@@ -9,6 +9,6 @@ const { validateUser } = require("../middleware/auth");
 router.use("/user", userRouter);
 router.use("/offices", validateUser, officesRouter);
 router.use("/collaborators", validateUser, collaboratorsRouter);
-router.use("/reports", validateUser, reportsRouter);
+router.use("/reports", reportsRouter);
 
 module.exports = router;
