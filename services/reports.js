@@ -48,20 +48,8 @@ class ReportsServices {
   }
 
   static async setReportImg(imgUrl) {
-    /* try {
-      const report = await Report.findByIdAndUpdate(
-        reportId,
-        { image: imgUrl },
-        {
-          runValidators: true,
-          new: true,
-        }
-      );
-      return { error: false, data: report };
-    } catch (error) {
-      return { error: true, data: error };
-    } */
     try {
+      /* AGREGAR QUE NO REPITA */
       const cacheImg = await Cache.create({imgUrl})
       return { error: false, data: cacheImg };
     } catch (error) {

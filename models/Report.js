@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const { User } = require("./User");
-const pointSchema = require("./pointSchema");
 
 const report = new Schema({
   issuer: {
@@ -41,7 +39,7 @@ const report = new Schema({
   },
   product: {
     type: String,
-    enum: ["modem", "hdmi", "screen", "mobile", "notebook", "headset", "mouse", "chair", "keyboard", "notebook charger", "mobile charger", "port adapter"],
+    enum: ["modem", "hdmi", "monitor", "mobile", "notebook", "headset", "mouse", "chair", "keyboard", "notebook charger", "mobile charger", "port adapter"],
     required: true,
   },
 });
@@ -49,13 +47,3 @@ const report = new Schema({
 const Report = mongoose.model("Report", report);
 
 module.exports = Report;
-
-/* 
-    const messageSchema = new Schema({
-  content: { type: String, required: true },
-  sender: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  receiver: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  createdAt: { type: Date, default: Date.now },
-});
-const Message = mongoose.model('Message', messageSchema);
-*/
