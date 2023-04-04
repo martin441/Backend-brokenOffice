@@ -9,6 +9,8 @@ const {
 
 router.get("/", validateOA, ResportsController.allReports);
 
+router.get("/single/:reportId", ResportsController.oneReport);
+
 router.get("/service", validateBeta, ResportsController.viewReports);
 
 router.get("/history", ResportsController.viewReports);
