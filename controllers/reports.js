@@ -1,6 +1,7 @@
 const ReportsServices = require("../services/reports");
 const UserServices = require("../services/user");
 const { sendEmail } = require("../utils/nodemailer");
+const { uploadImage } = require("../utils/uploadImg");
 require("dotenv").config();
 const { BETA } = process.env;
 
@@ -45,10 +46,21 @@ class ReportsController {
       const user = await UserServices.findOneByEmail(req.user.email);
       if (user.error) return res.status(404).send(user.data);
       const report = req.body;
-      const checkReports = await ReportsServices.getReports(user.data._id, "issuer")
-      const found = checkReports.data.find((rep) => rep.product === report.product && rep.status !== "closed")
-      if (found) return res.status(404).send("Active report already exists with this product");
-      const service = await ReportsServices.selectService(report.office, user.data._id)
+      const checkReports = await ReportsServices.getReports(
+        user.data._id,
+        "issuer"
+      );
+      const found = checkReports.data.find(
+        (rep) => rep.product === report.product && rep.status !== "closed"
+      );
+      if (found)
+        return res
+          .status(404)
+          .send("Active report already exists with this product");
+      const service = await ReportsServices.selectService(
+        report.office,
+        user.data._id
+      );
       if (service.error) return res.status(404).send(service.data);
       const { error, data } = await ReportsServices.createNewReport(
         report,
@@ -56,9 +68,9 @@ class ReportsController {
         service.data._id
       );
       if (error) return res.status(404).send(data);
-      const reportPop = await data.populate(['issuer', 'solver', 'office'])
-      sendEmail(reportPop, true)
-      res.status(201).send("Report created successfully");
+      const reportPop = await data.populate(["issuer", "solver", "office"]);
+      sendEmail(reportPop, true);
+      res.status(201).send(reportPop._id);
     } catch (error) {
       res.status(404).send(error);
     }
@@ -103,14 +115,16 @@ class ReportsController {
         type: "Point",
         coordinates: [long, lat],
       };
-      const { error, data } = await ReportsServices.nearOffices(userCoor)
+      const { error, data } = await ReportsServices.nearOffices(userCoor);
       if (error) return res.status(404).send(data);
       if (req.user.office._id) {
-        const noFavorite = data.filter((office) => office._id.toString() !== req.user.office._id)
-        const firstThree = noFavorite.slice(0, 3)
+        const noFavorite = data.filter(
+          (office) => office._id.toString() !== req.user.office._id
+        );
+        const firstThree = noFavorite.slice(0, 3);
         return res.status(200).send(firstThree);
       }
-      const firstThree = data.slice(0, 3)
+      const firstThree = data.slice(0, 3);
       res.status(200).send(firstThree);
     } catch (error) {
       res.status(404).send(error);
@@ -122,13 +136,26 @@ class ReportsController {
       const { reportId, emailTo } = req.body;
       const { error, data } = await ReportsServices.getOneReport(reportId);
       if (error) return res.status(404).send(data);
-      sendEmail(data, false, emailTo)
+      sendEmail(data, false, emailTo);
       res.status(200).send();
     } catch (error) {
       res.status(404).send(error);
     }
   }
 
+  static async createReportImg(req, res, next) {
+    const myFile = req.file;
+    try {
+      const imageUrl = await uploadImage(myFile);
+      const { error, data } = await ReportsServices.setReportImg(imageUrl)
+      if (error) {
+        return res.status(404).send(data);
+      }
+      res.status(201).send(data.imgUrl);
+    } catch (error) {
+      res.status(404).send(error);
+    }
+  }
 }
 
 module.exports = ReportsController;

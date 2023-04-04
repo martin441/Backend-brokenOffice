@@ -1,4 +1,4 @@
-const { User, Report, Office } = require("../models");
+const { User, Report, Office, Cache } = require("../models");
 require("dotenv").config();
 const { BETA } = process.env;
 
@@ -42,6 +42,16 @@ class ReportsServices {
       updatedService.activeReports += 1;
       updatedService.save();
       return { error: false, data: newReport };
+    } catch (error) {
+      return { error: true, data: error };
+    }
+  }
+
+  static async setReportImg(imgUrl) {
+    try {
+      /* AGREGAR QUE NO REPITA */
+      const cacheImg = await Cache.create({imgUrl})
+      return { error: false, data: cacheImg };
     } catch (error) {
       return { error: true, data: error };
     }
