@@ -14,6 +14,18 @@ class ReportsController {
       res.status(404).send(error);
     }
   }
+
+  static async oneReport(req, res, next) {
+    try {
+      const { reportId } = req.params;
+      const { error, data } = await ReportsServices.getOneReport(reportId);
+      if (error) return res.status(404).send(data);
+      res.status(200).send(data);
+    } catch (error) {
+      res.status(404).send(error);
+    }
+  }
+
   static async viewReports(req, res, next) {
     try {
       const role = req.user.type === BETA ? "solver" : "issuer";
