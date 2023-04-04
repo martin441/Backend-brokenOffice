@@ -2,7 +2,7 @@ const ReportsServices = require("../services/reports");
 const UserServices = require("../services/user");
 const { sendEmail } = require("../utils/nodemailer");
 require("dotenv").config();
-const { BETA, BETAT } = process.env;
+const { BETA } = process.env;
 
 class ReportsController {
   static async allReports(req, res, next) {
