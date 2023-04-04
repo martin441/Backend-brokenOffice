@@ -8,16 +8,43 @@ require("dotenv").config();
 const { PORT } = process.env;
 const cookiesParser = require("cookie-parser");
 const cors = require("cors");
-const multer = require('multer');
+const multer = require("multer");
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+
+const httpServer = createServer(app);
+
+const io = new Server(httpServer, {
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("socket id", socket.id);
+
+  socket.on("join_room", async(data) => {
+    socket.join(data);
+  });
+
+  socket.on("chat message", (msg, room) => {
+    console.log("Message: " + msg);
+    io.to(room).emit("chat message", msg);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("A user has disconnected.");
+  });
+});
 
 const multerMid = multer({
   storage: multer.memoryStorage(),
   limits: {
     fileSize: 5 * 1024 * 1024,
   },
-})
+});
 
-app.use(multerMid.single('file'))
+app.use(multerMid.single("file"));
 
 app.use(cookiesParser());
 
@@ -39,10 +66,9 @@ app.use((err, req, res, next) => {
   res.status(500).send(err.message);
 });
 
-
 db_sync()
   .then(() => {
-    app.listen(PORT, () => console.log(`Server ON PORT: ${PORT}`));
+    httpServer.listen(PORT, () => console.log(`Server ON PORT: ${PORT}`));
   })
   .catch((err) => {
     console.error(err);
