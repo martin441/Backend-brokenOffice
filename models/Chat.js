@@ -16,4 +16,3 @@ const Chat = mongoose.model("Chat", chat);
 
 module.exports = Chat;
 
-

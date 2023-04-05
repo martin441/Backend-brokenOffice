@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post("/create", ChatsController.createChat);
 router.post("/messages", ChatsController.addMessages);
-router.get("/history", ChatsController.messageHistory);
+router.get("/history/:chatId", ChatsController.messageHistory);
 
 
 module.exports = router;
