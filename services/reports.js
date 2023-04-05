@@ -49,7 +49,8 @@ class ReportsServices {
 
   static async setReportImg(imgUrl) {
     try {
-      /* AGREGAR QUE NO REPITA */
+      const found = await Cache.findOne({imgUrl})
+      if (found) return { error: false, data: found };
       const cacheImg = await Cache.create({imgUrl})
       return { error: false, data: cacheImg };
     } catch (error) {
