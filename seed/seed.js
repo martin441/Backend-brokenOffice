@@ -245,7 +245,7 @@ const seedUserOffices = async () => {
     lastName: "Staff",
     type: "service",
     role: "Staff",
-    password: "12345",
+    password: "brokenoffice123",
     email: "service@globant.com",
     addressName: "",
     addressCoor: {
