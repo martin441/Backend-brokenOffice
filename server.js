@@ -23,13 +23,14 @@ const io = new Server(httpServer, {
 io.on("connection", (socket) => {
   console.log("socket id", socket.id);
 
-  socket.on("join_room", async(data) => {
+  socket.on("join_room", (data) => {
     socket.join(data);
   });
 
-  socket.on("chat message", (msg, room) => {
-    console.log("Message: " + msg);
-    io.to(room).emit("chat message", msg);
+  socket.on("message_sent", (msg, user, room) => {
+    const currentDate = new Date(Date.now());
+    const messageToSend = {user: {name:user}, content:msg, date: currentDate}
+    socket.to(room).emit("message_received", messageToSend);
   });
 
   socket.on("disconnect", () => {
