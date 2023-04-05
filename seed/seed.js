@@ -7,16 +7,30 @@ async function addUsers(users) {
   }
 }
 
+function sortAddresses(streets, cities) {
+  const randomName = Math.floor(Math.random() * 20);
+  const randomNumber = Math.floor(Math.random() * (3000 - 10 + 1)) + 10;
+  return `${streets[randomName]} ${randomNumber}, ${cities[randomName]}`;
+}
+
+function randomLat() {
+  return parseFloat((Math.random() * (-54 - -21) + -21).toFixed(8));
+}
+function randomLong() {
+  return parseFloat((Math.random() * (-70 - -53) + -53).toFixed(8));
+}
+
 const seedUserOffices = async () => {
   const users = [
     {
       name: "Super Admin",
       lastName: "Owner",
       type: "superAdmin",
-      role: "God",
-      password: "12345",
+      role: "superAdmin",
+      password: "brokenoffice123",
       email: "superadmin@globant.com",
-      addressName: "",
+      addressName:
+        "Av. Santa Fe 877, Rosario, Provincia de Santa Fe, Argentina",
       addressCoor: {
         type: "Point",
         coordinates: [-62.261036, -38.709426],
@@ -27,9 +41,10 @@ const seedUserOffices = async () => {
       lastName: "lite",
       type: "admin",
       role: "admin",
-      password: "12345",
+      password: "brokenoffice123",
       email: "admin@globant.com",
-      addressName: "",
+      addressName:
+        "Rodríguez 66, Necochea, Provincia de Buenos Aires, Argentina",
       addressCoor: {
         type: "Point",
         coordinates: [-60.27640501877847, -38.38154544145026],
@@ -40,9 +55,9 @@ const seedUserOffices = async () => {
       lastName: "Staff",
       type: "standard",
       role: "Staff",
-      password: "12345",
+      password: "brokenoffice123",
       email: "standard@globant.com",
-      addressName: "",
+      addressName: "Alem 1777, Azul, Prov. Bs As, Argentina",
       addressCoor: {
         type: "Point",
         coordinates: [-31.400418168552886, -64.22622374454102],
@@ -231,7 +246,7 @@ const seedUserOffices = async () => {
     type: "service",
     role: "Staff",
     password: "12345",
-    email: "servic@globant.com",
+    email: "service@globant.com",
     addressName: "",
     addressCoor: {
       type: "Point",
@@ -239,6 +254,52 @@ const seedUserOffices = async () => {
     },
     office: "",
   };
+
+  const streets = [
+    "Av. Santa Fe",
+    "Av. Cabildo",
+    "Av. Corrientes",
+    "Av. Rivadavia",
+    "Av. 9 de Julio",
+    "Av. Libertador",
+    "Florida",
+    "Reconquista",
+    "Bartolomé Mitre",
+    "Esmeralda",
+    "Paraguay",
+    "Suipacha",
+    "Tucumán",
+    "Uruguay",
+    "Viamonte",
+    "Sarmiento",
+    "Lavalle",
+    "Carlos Pellegrini",
+    "Marcelo T. de Alvear",
+    "Alem"
+  ];
+  
+  const cities = [
+    "Córdoba, Córdoba, Argentina",
+    "Salta, Salta, Argentina",
+    "Rosario, Santa Fe, Argentina",
+    "Mendoza, Mendoza, Argentina",
+    "San Miguel de Tucumán, Tucumán, Argentina",
+    "La Plata, Buenos Aires, Argentina",
+    "Bahía Blanca, Buenos Aires, Argentina",
+    "Corrientes, Corrientes, Argentina",
+    "San Salvador de Jujuy, Jujuy, Argentina",
+    "Neuquén, Neuquén, Argentina",
+    "Formosa, Formosa, Argentina",
+    "Posadas, Misiones, Argentina",
+    "San Carlos de Bariloche, Río Negro, Argentina",
+    "Santa Rosa, La Pampa, Argentina",
+    "San Luis, San Luis, Argentina",
+    "Ushuaia, Tierra del Fuego, Argentina",
+    "Comodoro Rivadavia, Chubut, Argentina",
+    "Rawson, Chubut, Argentina",
+    "Viedma, Río Negro, Argentina",
+    "La Rioja, La Rioja, Argentina",
+  ];
 
   try {
     await db_sync();
@@ -249,14 +310,29 @@ const seedUserOffices = async () => {
       count += 1;
       service.email = `service${count}@globant.com`;
       service.name = `Service${count}`;
+      service.addressName = sortAddresses(streets, cities);
+      service.addressCoor = {
+        type: "Point",
+        coordinates: [randomLong(), randomLat()],
+      };
       await User.create(service);
       count += 1;
       service.email = `service${count}@globant.com`;
       service.name = `Service${count}`;
+      service.addressName = sortAddresses(streets, cities);
+      service.addressCoor = {
+        type: "Point",
+        coordinates: [randomLong(), randomLat()],
+      };
       await User.create(service);
       count += 1;
       service.email = `service${count}@globant.com`;
       service.name = `Service${count}`;
+      service.addressName = sortAddresses(streets, cities);
+      service.addressCoor = {
+        type: "Point",
+        coordinates: [randomLong(), randomLat()],
+      };
       await User.create(service);
     }
     await addUsers(users);
