@@ -69,7 +69,7 @@ class ReportsController {
       );
       if (error) return res.status(404).send(data);
       const reportPop = await data.populate(["issuer", "solver", "office"]);
-      sendEmail(reportPop, true);
+      sendEmail(reportPop, 1);
       res.status(201).send(reportPop._id);
     } catch (error) {
       res.status(404).send(error);
@@ -85,6 +85,7 @@ class ReportsController {
         status
       );
       if (error) return res.status(404).send(data);
+      sendEmail(data, 3);
       res.status(200).send("Report updated successfully");
     } catch (error) {
       res.status(404).send(error);
@@ -136,7 +137,7 @@ class ReportsController {
       const { reportId, emailTo } = req.body;
       const { error, data } = await ReportsServices.getOneReport(reportId);
       if (error) return res.status(404).send(data);
-      sendEmail(data, false, emailTo);
+      sendEmail(data, 2, emailTo);
       res.status(200).send();
     } catch (error) {
       res.status(404).send(error);
