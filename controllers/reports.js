@@ -4,6 +4,7 @@ const { sendEmail } = require("../utils/nodemailer");
 const { uploadImage } = require("../utils/uploadImg");
 require("dotenv").config();
 const { BETA } = process.env;
+const sharp = require("sharp");
 
 class ReportsController {
   static async allReports(req, res, next) {
@@ -87,8 +88,8 @@ class ReportsController {
       } else {
         title = req.body.title;
         description = req.body.description;
-      };
-      const reason = {title: title, description: description};
+      }
+      const reason = { title: title, description: description };
       const { error, data } = await ReportsServices.editStateReport(
         reportId,
         status,
@@ -157,13 +158,14 @@ class ReportsController {
   }
 
   static async createReportImg(req, res, next) {
-    const myFile = req.file;
     try {
+      const myFile = req.file;
+      const metadata = await sharp(myFile.buffer).metadata();
+      if (metadata.width > 2000 || metadata.height > 2000)
+        return res.status(500).send("The image needs to be smaller");
       const imageUrl = await uploadImage(myFile);
-      const { error, data } = await ReportsServices.setReportImg(imageUrl)
-      if (error) {
-        return res.status(404).send(data);
-      }
+      const { error, data } = await ReportsServices.setReportImg(imageUrl);
+      if (error) return res.status(404).send(data);
       res.status(201).send(data.imgUrl);
     } catch (error) {
       res.status(404).send(error);

@@ -1,6 +1,7 @@
 const UserServices = require("../services/user");
 const { generatePayload } = require("../utils/generatePayload");
 const { uploadImage } = require("../utils/uploadImg");
+const sharp = require("sharp");
 
 class UserController {
   static async getProfile(req, res, next) {
@@ -73,16 +74,22 @@ class UserController {
 
   static async editPicture(req, res, next) {
     const { email } = req.user;
-    const myFile = req.file
+    const myFile = req.file;
     try {
-        const imageUrl = await uploadImage(myFile)
-        const { error, data } = await UserServices.updateProfile({picture: imageUrl}, email);
-        if (error) {
-          return res.status(404).send(data);
-        }
-        const { token, payload } = generatePayload(data);
-        res.cookie("token", token);
-        res.status(201).send(payload);
+      const metadata = await sharp(myFile.buffer).metadata();
+      if (metadata.width > 2000 || metadata.height > 2000)
+        return res.status(500).send("The image needs to be smaller");
+      const imageUrl = await uploadImage(myFile);
+      const { error, data } = await UserServices.updateProfile(
+        { picture: imageUrl },
+        email
+      );
+      if (error) {
+        return res.status(404).send(data);
+      }
+      const { token, payload } = generatePayload(data);
+      res.cookie("token", token);
+      res.status(201).send(payload);
     } catch (error) {
       res.status(404).send(error);
     }
