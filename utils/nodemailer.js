@@ -43,6 +43,8 @@ async function sendEmail (report, op, shareMail) {
       solver: `${report.solver.name}`,
       office:`${report.office.address.street} - ${report.office.address.floor}`,
       status:`${report.status}`,
+      description: `${report.reason.description}`,
+      title: `${report.reason.title}`
     }
     const htmlToSend3 = template3(replacements3);
 
