@@ -49,6 +49,7 @@ class CollaboratorsServices {
       return { error: true, data: error };
     }
   }
+
   static async removeUser(email) {        
     try {      
       const removedUser = await User.deleteOne({ email });
@@ -57,6 +58,7 @@ class CollaboratorsServices {
       return { error: true, data: error };
     }
   }
+
   static async delegateReports(email) {    
     try {      
       const user = await User.findOne({email})

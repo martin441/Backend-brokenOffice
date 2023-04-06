@@ -4,6 +4,7 @@ const { sendEmail } = require("../utils/nodemailer");
 const { uploadImage } = require("../utils/uploadImg");
 require("dotenv").config();
 const { BETA } = process.env;
+const sharp = require("sharp");
 
 class ReportsController {
   static async allReports(req, res, next) {
@@ -61,17 +62,22 @@ class ReportsController {
         "issuer"
       );
       const found = checkReports.data.find(
-        (rep) => rep.product === report.product && rep.status !== "closed"
+        (rep) =>
+          rep.product === report.product &&
+          rep.status !== "resolved" &&
+          rep.status !== "rejected"
       );
       if (found)
         return res
           .status(404)
           .send("Active report already exists with this product");
+
       const service = await ReportsServices.selectService(
         report.office,
         user.data._id
       );
       if (service.error) return res.status(404).send(service.data);
+
       const { error, data } = await ReportsServices.createNewReport(
         report,
         user.data._id,
@@ -105,20 +111,18 @@ class ReportsController {
         reason
       );
       if (error) return res.status(404).send(data);
-      if (data.status === "closed") {
+      if (data.status === "resolved") {
         sendEmail(data, 3);
+      }
+      if (data.status === "rejected") {
+        sendEmail(data, 4);
       }
       res.status(200).send("Report updated successfully");
     } catch (error) {
       res.status(404).send(error);
     }
   }
-  static async editReportDestination(req, res, next) {
-    try {
-    } catch (error) {
-      res.status(404).send(error);
-    }
-  }
+
   static async deleteReport(req, res, next) {
     try {
       const { reportId } = req.params;
@@ -167,13 +171,14 @@ class ReportsController {
   }
 
   static async createReportImg(req, res, next) {
-    const myFile = req.file;
     try {
+      const myFile = req.file;
+      const metadata = await sharp(myFile.buffer).metadata();
+      if (metadata.width > 2000 || metadata.height > 2000)
+        return res.status(500).send("The image needs to be smaller");
       const imageUrl = await uploadImage(myFile);
       const { error, data } = await ReportsServices.setReportImg(imageUrl);
-      if (error) {
-        return res.status(404).send(data);
-      }
+      if (error) return res.status(404).send(data);
       res.status(201).send(data.imgUrl);
     } catch (error) {
       res.status(404).send(error);

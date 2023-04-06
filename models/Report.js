@@ -31,7 +31,7 @@ const report = new Schema({
   },
   status: {
     type: String,
-    enum: ["issued", "in progress", "closed"],
+    enum: ["issued", "in progress", "resolved", "rejected"],
     default: "issued",
   },  
   product: {
