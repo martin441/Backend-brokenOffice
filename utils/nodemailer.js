@@ -33,6 +33,19 @@ async function sendEmail (report, op, shareMail) {
     }
     const htmlToSend2 = template2(replacements2);
 
+    const filePath3 = path.join(__dirname, '../assets/index3.html');
+    const source3 = fs.readFileSync(filePath3, 'utf-8').toString();
+    const template3 = handlebars.compile(source3);
+    const replacements3 = { 
+      order: `${report._id}`,
+      date: `${report.date}`,
+      issuer: `${report.issuer.name}`,
+      solver: `${report.solver.name}`,
+      office:`${report.office.address.street} - ${report.office.address.floor}`,
+      status:`${report.status}`,
+    }
+    const htmlToSend3 = template3(replacements3);
+
     const transporter = nodemailer.createTransport({
       service: "gmail",
       host: "smtp.gmail.com",
@@ -45,11 +58,19 @@ async function sendEmail (report, op, shareMail) {
 
     const imgPath = path.join(__dirname, '../assets/greenbook-logo-7.jpg');
 
+    let finalHtml = htmlToSend;
+
+    if (op === 2) {
+      finalHtml = htmlToSend2
+    } else if (op === 3) {
+      finalHtml = htmlToSend3
+    }
+
     const sended = await transporter.sendMail({
       from: op ? NM_EMAIL : `${report.issuer.email}`,
       to: op ? `${report.issuer.email}` : shareMail,
       subject: `Broken Office Report: ${report.title}`,
-      html: op ? htmlToSend : htmlToSend2,
+      html: finalHtml,
       attachments: [{
         filename: 'greenbook-logo-7.jpg',
         path: imgPath,
