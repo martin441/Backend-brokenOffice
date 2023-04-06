@@ -85,7 +85,9 @@ class ReportsController {
         status
       );
       if (error) return res.status(404).send(data);
-      sendEmail(data, 3);
+      if (data.status === "closed") {
+        sendEmail(data, 3);
+      }
       res.status(200).send("Report updated successfully");
     } catch (error) {
       res.status(404).send(error);
