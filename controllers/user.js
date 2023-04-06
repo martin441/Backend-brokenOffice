@@ -1,6 +1,7 @@
 const UserServices = require("../services/user");
 const { generatePayload } = require("../utils/generatePayload");
 const { uploadImage } = require("../utils/uploadImg");
+const sharp = require("sharp");
 
 class UserController {
   static async getProfile(req, res, next) {
@@ -76,6 +77,9 @@ class UserController {
     const { email } = req.user;
     const myFile = req.file;
     try {
+      const metadata = await sharp(myFile.buffer).metadata();
+      if (metadata.width > 2000 || metadata.height > 2000)
+        return res.status(500).send("The image needs to be smaller");
       const imageUrl = await uploadImage(myFile);
       const { error, data } = await UserServices.updateProfile(
         { picture: imageUrl },
