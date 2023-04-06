@@ -28,6 +28,7 @@ class UserController {
       res.status(404).send(error);
     }
   }
+
   static async editPassword(req, res, next) {
     const { oldPassword, newPassword } = req.body;
     const { email } = req.user;
@@ -73,16 +74,19 @@ class UserController {
 
   static async editPicture(req, res, next) {
     const { email } = req.user;
-    const myFile = req.file
+    const myFile = req.file;
     try {
-        const imageUrl = await uploadImage(myFile)
-        const { error, data } = await UserServices.updateProfile({picture: imageUrl}, email);
-        if (error) {
-          return res.status(404).send(data);
-        }
-        const { token, payload } = generatePayload(data);
-        res.cookie("token", token);
-        res.status(201).send(payload);
+      const imageUrl = await uploadImage(myFile);
+      const { error, data } = await UserServices.updateProfile(
+        { picture: imageUrl },
+        email
+      );
+      if (error) {
+        return res.status(404).send(data);
+      }
+      const { token, payload } = generatePayload(data);
+      res.cookie("token", token);
+      res.status(201).send(payload);
     } catch (error) {
       res.status(404).send(error);
     }

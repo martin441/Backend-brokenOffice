@@ -13,6 +13,7 @@ class CollaboratorsServices {
       return { error: true, data: error };
     }
   }
+  
   static async findUser(email) {
     try {
       const userExists = await User.find({ email });
@@ -21,6 +22,7 @@ class CollaboratorsServices {
       return { error: true, data: error };
     }
   }
+
   static async createNewUser(info) {
     try {
       const newUser = await User.create(info);
@@ -29,6 +31,7 @@ class CollaboratorsServices {
       return { error: true, data: error };
     }
   }
+
   static async editType(email, type) {    
     try {      
       const privilegesUpdated = await User.findOneAndUpdate({ email }, {type})
@@ -37,6 +40,7 @@ class CollaboratorsServices {
       return { error: true, data: error };
     }
   }
+
   static async removeUser(email) {        
     try {      
       const removedUser = await User.deleteOne({ email });
@@ -45,6 +49,7 @@ class CollaboratorsServices {
       return { error: true, data: error };
     }
   }
+
   static async delegateReports(email) {    
     try {      
       const user = await User.findOne({email})

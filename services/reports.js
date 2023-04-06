@@ -5,7 +5,7 @@ const { BETA } = process.env;
 class ReportsServices {
   static async getAllReports() {
     try {
-      const allReports = await Report.find({}).populate(["issuer", "solver"])
+      const allReports = await Report.find({}).populate(["issuer", "solver"]);
       return { error: false, data: allReports };
     } catch (error) {
       return { error: true, data: error };
@@ -13,7 +13,11 @@ class ReportsServices {
   }
   static async getOneReport(id) {
     try {
-      const report = await Report.findById(id).populate(["issuer", "solver", "office"])
+      const report = await Report.findById(id).populate([
+        "issuer",
+        "solver",
+        "office",
+      ]);
       return { error: false, data: report };
     } catch (error) {
       return { error: true, data: error };
@@ -22,7 +26,11 @@ class ReportsServices {
 
   static async getReports(userId, role) {
     try {
-      const allServiceReports = await Report.find({ [role]: userId }).populate(["issuer", "solver", "office"]);
+      const allServiceReports = await Report.find({ [role]: userId }).populate([
+        "issuer",
+        "solver",
+        "office",
+      ]);
       return { error: false, data: allServiceReports };
     } catch (error) {
       return { error: true, data: error };
@@ -49,9 +57,9 @@ class ReportsServices {
 
   static async setReportImg(imgUrl) {
     try {
-      const found = await Cache.findOne({imgUrl})
+      const found = await Cache.findOne({ imgUrl });
       if (found) return { error: false, data: found };
-      const cacheImg = await Cache.create({imgUrl})
+      const cacheImg = await Cache.create({ imgUrl });
       return { error: false, data: cacheImg };
     } catch (error) {
       return { error: true, data: error };
@@ -61,7 +69,11 @@ class ReportsServices {
   static async editStateReport(reportId, status, reason) {
     try {
       const checkStatus = await Report.findById(reportId);
-      if (checkStatus.status === "closed") return { error: true, data: "Report already closed" };
+      if (
+        checkStatus.status === "resolved" ||
+        checkStatus.status === "rejected"
+      )
+        return { error: true, data: "Report already closed" };
       const reportStateUpdated = await Report.findByIdAndUpdate(
         reportId,
         { status, reason },
@@ -70,7 +82,7 @@ class ReportsServices {
           new: true,
         }
       );
-      if (status === "closed") {
+      if (status === "resolved" || status === "rejected") {
         const office = await Office.findById(reportStateUpdated.office);
         office.openReports -= 1;
         office.save();
@@ -78,7 +90,11 @@ class ReportsServices {
         updatedService.activeReports -= 1;
         updatedService.save();
       }
-      const reportPop = await reportStateUpdated.populate(["issuer", "solver", "office"])
+      const reportPop = await reportStateUpdated.populate([
+        "issuer",
+        "solver",
+        "office",
+      ]);
       return { error: false, data: reportPop };
     } catch (error) {
       return { error: true, data: error };
@@ -91,7 +107,9 @@ class ReportsServices {
       const office = await Office.findById(deletedReport.office.toString());
       office.openReports -= 1;
       office.save();
-      const updatedService = await User.findById(deletedReport.solver.toString());
+      const updatedService = await User.findById(
+        deletedReport.solver.toString()
+      );
       updatedService.activeReports -= 1;
       updatedService.save();
       return { error: false, data: deletedReport };
@@ -99,6 +117,7 @@ class ReportsServices {
       return { error: true, data: error };
     }
   }
+  
   static async nearOffices(coor) {
     try {
       const arrNearOff = await Office.aggregate([
@@ -116,13 +135,15 @@ class ReportsServices {
       return { error: true, data: error };
     }
   }
+
   static async selectService(officeId, issuerId) {
     try {
       const allUsers = await User.find({ office: officeId });
       const service = allUsers
         .filter((user) => user.type === BETA)
         .sort((a, b) => a.activeReports - b.activeReports);
-      if (service[0]._id.toString() === issuerId.toString()) return { error: false, data: service[1] }
+      if (service[0]._id.toString() === issuerId.toString())
+        return { error: false, data: service[1] };
       return { error: false, data: service[0] };
     } catch (error) {
       return { error: true, data: error };

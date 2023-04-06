@@ -16,8 +16,6 @@ router.put(
   validateOAB,
   ResportsController.editReportState
 );
-//Edit report's office and solver (superAdmin, admin)
-// router.put("/edit/destination", validateOA, ResportsController.editUReportDestination);
 router.delete("/delete/:reportId", validateOA, ResportsController.deleteReport);
 
 module.exports = router;
