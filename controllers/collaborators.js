@@ -13,6 +13,18 @@ class CollaboratorsController {
       res.status(404).send(error);
     }
   }
+
+  static async singleUser(req, res, next) {
+    try {
+      const { userId } = req.params;
+      const { error, data } = await CollaboratorsServices.findUserById(userId);
+      if (error) return res.status(404).send(data);
+      res.status(200).send(data);
+    } catch (error) {
+      res.status(404).send(error);
+    }
+  }
+
   static async createUser(req, res, next) {
     try {
       if(req.user.type === ALPHA && req.body.type === ALPHAT){

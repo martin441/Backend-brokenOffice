@@ -29,11 +29,20 @@ class ReportsController {
 
   static async viewReports(req, res, next) {
     try {
-      const role = req.user.type === BETA ? "solver" : "issuer";
       const user = await UserServices.findOneByEmail(req.user.email);
-      const { error, data } = await ReportsServices.getReports(
-        user.data._id,
-        role
+      const { error, data } = await ReportsServices.getReports(user.data._id);
+      if (error) return res.status(404).send(data);
+      res.status(200).send(data);
+    } catch (error) {
+      res.status(404).send(error);
+    }
+  }
+
+  static async serviceReports(req, res, next) {
+    try {
+      const user = await UserServices.findOneByEmail(req.user.email);
+      const { error, data } = await ReportsServices.getServiceReports(
+        user.data._id
       );
       if (error) return res.status(404).send(data);
       res.status(200).send(data);
@@ -41,6 +50,7 @@ class ReportsController {
       res.status(404).send(error);
     }
   }
+
   static async createReport(req, res, next) {
     try {
       const user = await UserServices.findOneByEmail(req.user.email);
@@ -87,8 +97,8 @@ class ReportsController {
       } else {
         title = req.body.title;
         description = req.body.description;
-      };
-      const reason = {title: title, description: description};
+      }
+      const reason = { title: title, description: description };
       const { error, data } = await ReportsServices.editStateReport(
         reportId,
         status,
@@ -160,7 +170,7 @@ class ReportsController {
     const myFile = req.file;
     try {
       const imageUrl = await uploadImage(myFile);
-      const { error, data } = await ReportsServices.setReportImg(imageUrl)
+      const { error, data } = await ReportsServices.setReportImg(imageUrl);
       if (error) {
         return res.status(404).send(data);
       }

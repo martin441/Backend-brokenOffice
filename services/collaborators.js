@@ -13,6 +13,16 @@ class CollaboratorsServices {
       return { error: true, data: error };
     }
   }
+
+  static async findUserById(userId) {
+    try {
+      const singleUser = await User.findById(userId);
+      return { error: false, data: singleUser };
+    } catch (error) {
+      return { error: true, data: error };
+    }
+  }
+
   static async findUser(email) {
     try {
       const userExists = await User.find({ email });
@@ -21,6 +31,7 @@ class CollaboratorsServices {
       return { error: true, data: error };
     }
   }
+
   static async createNewUser(info) {
     try {
       const newUser = await User.create(info);
@@ -29,6 +40,7 @@ class CollaboratorsServices {
       return { error: true, data: error };
     }
   }
+  
   static async editType(email, type) {    
     try {      
       const privilegesUpdated = await User.findOneAndUpdate({ email }, {type})
