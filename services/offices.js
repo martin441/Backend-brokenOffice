@@ -17,14 +17,6 @@ class OfficesServices {
       return { error: true, data: error };
     }
   }
-  static async deleteAnOffice(officeId) {
-    try {
-      const deletedOffice = await Office.findByIdAndRemove(officeId);
-      return { error: false, data: deletedOffice };
-    } catch (error) {
-      return { error: true, data: error };
-    }
-  }
   static async editAnOffice(obj, officeId) {
     try {
       const updatedOffice = await Office.findByIdAndUpdate(officeId, obj, {
@@ -35,6 +27,15 @@ class OfficesServices {
       return { error: true, data: error };
     }
   }
+  static async deleteAnOffice(officeId) {
+    try {
+      const deletedOffice = await Office.findByIdAndRemove(officeId);
+      return { error: false, data: deletedOffice };
+    } catch (error) {
+      return { error: true, data: error };
+    }
+  }
+  
 }
 
 module.exports = OfficesServices;

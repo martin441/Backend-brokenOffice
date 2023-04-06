@@ -30,13 +30,13 @@ class ChatsController {
         try{
             const email = req.user.email
             const {chatId} = req.params;
-            const {issuer} = req.query;
-            const {solver} = req.query;
+            // const {issuer} = req.query;
+            // const {solver} = req.query;
             const user = await UserServices.findOneByEmail(email)
             if (user.error) return res.status(404).send(user.data);
-            if (user.data._id !== issuer || user.data._id !== solver) {
-                return res.status(401).send("Invalid credentials")
-            }
+            // if (user.data._id !== issuer || user.data._id !== solver) {
+            //     return res.status(401).send("Invalid credentials")
+            // }
             const chatHistory = await ChatServices.getChatHistory(chatId)
             if (chatHistory.error) return res.status(404).send(chatHistory.data);
             res.status(200).send(chatHistory.data.allMessages)
