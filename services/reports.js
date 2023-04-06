@@ -78,7 +78,8 @@ class ReportsServices {
         updatedService.activeReports -= 1;
         updatedService.save();
       }
-      return { error: false, data: reportStateUpdated };
+      const reportPop = await reportStateUpdated.populate(["issuer", "solver", "office"])
+      return { error: false, data: reportPop };
     } catch (error) {
       return { error: true, data: error };
     }
