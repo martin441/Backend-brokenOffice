@@ -24,14 +24,19 @@ class ReportsServices {
     }
   }
 
-  static async getReports(userId, role) {
+  static async getReports(userId) {
     try {
-      const allServiceReports = await Report.find({ [role]: userId }).populate([
-        "issuer",
-        "solver",
-        "office",
-      ]);
-      return { error: false, data: allServiceReports };
+      const allIssuerReports = await Report.find({ issuer: userId }).populate(["issuer", "solver", "office"]);
+      return { error: false, data: allIssuerReports };
+    } catch (error) {
+      return { error: true, data: error };
+    }
+  }
+
+  static async getServiceReports(userId) {
+    try {
+      const allSolverReports = await Report.find({ solver: userId}).populate(["issuer", "solver", "office"]);
+      return { error: false, data: allSolverReports };
     } catch (error) {
       return { error: true, data: error };
     }
