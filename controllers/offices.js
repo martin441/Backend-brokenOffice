@@ -10,6 +10,7 @@ class OfficesController {
       res.status(404).send(error);
     }
   }
+
   static async addOffice(req, res, next) {
     try {
       const { error, data } = await OfficesServices.addNewOffice(req.body);
@@ -19,6 +20,7 @@ class OfficesController {
       res.status(404).send(error);
     }
   }
+
   static async editOffice(req, res, next) {
     try {
       const { officeId } = req.params;
@@ -34,6 +36,7 @@ class OfficesController {
       res.status(404).send(error);
     }
   }
+
   static async deleteOffice(req, res, next) {
     try {
       const { officeId } = req.params;
@@ -44,7 +47,6 @@ class OfficesController {
       res.status(404).send(error);
     }
   }
-  
 }
 
 module.exports = OfficesController;

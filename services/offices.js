@@ -1,4 +1,4 @@
-const { User, Office } = require("../models");
+const { Office } = require("../models");
 
 class OfficesServices {
   static async getAll() {
@@ -9,6 +9,7 @@ class OfficesServices {
       return { error: true, data: error };
     }
   }
+
   static async addNewOffice(office) {
     try {
       const newOffice = await Office.create(office);
@@ -17,6 +18,7 @@ class OfficesServices {
       return { error: true, data: error };
     }
   }
+
   static async editAnOffice(obj, officeId) {
     try {
       const updatedOffice = await Office.findByIdAndUpdate(officeId, obj, {
@@ -27,6 +29,7 @@ class OfficesServices {
       return { error: true, data: error };
     }
   }
+
   static async deleteAnOffice(officeId) {
     try {
       const deletedOffice = await Office.findByIdAndRemove(officeId);

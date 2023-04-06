@@ -12,6 +12,7 @@ class ChatsController {
         res.status(404).send(error);
       }
     }
+
     static async addMessages(req, res, next) {
         try{
             const email = req.user.email
@@ -26,6 +27,7 @@ class ChatsController {
             res.status(404).send(error);
         }
     }
+    
     static async messageHistory(req,res,next) {
         try{
             const email = req.user.email

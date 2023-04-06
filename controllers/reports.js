@@ -42,6 +42,7 @@ class ReportsController {
       res.status(404).send(error);
     }
   }
+  
   static async createReport(req, res, next) {
     try {
       const user = await UserServices.findOneByEmail(req.user.email);
@@ -52,17 +53,22 @@ class ReportsController {
         "issuer"
       );
       const found = checkReports.data.find(
-        (rep) => rep.product === report.product && rep.status !== "closed"
+        (rep) =>
+          rep.product === report.product &&
+          rep.status !== "resolved" &&
+          rep.status !== "rejected"
       );
       if (found)
         return res
           .status(404)
           .send("Active report already exists with this product");
+
       const service = await ReportsServices.selectService(
         report.office,
         user.data._id
       );
       if (service.error) return res.status(404).send(service.data);
+
       const { error, data } = await ReportsServices.createNewReport(
         report,
         user.data._id,
@@ -96,20 +102,18 @@ class ReportsController {
         reason
       );
       if (error) return res.status(404).send(data);
-      if (data.status === "closed") {
+      if (data.status === "resolved") {
         sendEmail(data, 3);
+      }
+      if (data.status === "rejected") {
+        sendEmail(data, 4);
       }
       res.status(200).send("Report updated successfully");
     } catch (error) {
       res.status(404).send(error);
     }
   }
-  static async editReportDestination(req, res, next) {
-    try {
-    } catch (error) {
-      res.status(404).send(error);
-    }
-  }
+
   static async deleteReport(req, res, next) {
     try {
       const { reportId } = req.params;

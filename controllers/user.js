@@ -29,6 +29,7 @@ class UserController {
       res.status(404).send(error);
     }
   }
+
   static async editPassword(req, res, next) {
     const { oldPassword, newPassword } = req.body;
     const { email } = req.user;

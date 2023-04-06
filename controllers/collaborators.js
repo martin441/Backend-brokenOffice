@@ -13,6 +13,7 @@ class CollaboratorsController {
       res.status(404).send(error);
     }
   }
+
   static async createUser(req, res, next) {
     try {
       if(req.user.type === ALPHA && req.body.type === ALPHAT){
@@ -29,6 +30,7 @@ class CollaboratorsController {
       res.status(404).send(error);
     }
   }
+
   static async editUserType(req, res, next) {
     const { email, type } = req.body;
     try {
@@ -41,6 +43,7 @@ class CollaboratorsController {
       res.status(404).send(error);
     }
   }
+  
   static async deleteUser(req, res, next) {
     const { userEmail } = req.params;
     try {
