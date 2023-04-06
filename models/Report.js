@@ -42,6 +42,14 @@ const report = new Schema({
     enum: ["modem", "hdmi", "monitor", "mobile", "notebook", "headset", "mouse", "chair", "keyboard", "notebook charger", "mobile charger", "port adapter"],
     required: true,
   },
+  reason: {
+    title: {
+      type: String,
+    },
+    description: {
+      type: String,
+    },
+  }
 });
 
 const Report = mongoose.model("Report", report);

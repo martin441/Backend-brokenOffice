@@ -58,13 +58,13 @@ class ReportsServices {
     }
   }
 
-  static async editStateReport(reportId, status) {
+  static async editStateReport(reportId, status, reason) {
     try {
       const checkStatus = await Report.findById(reportId);
       if (checkStatus.status === "closed") return { error: true, data: "Report already closed" };
       const reportStateUpdated = await Report.findByIdAndUpdate(
         reportId,
-        { status },
+        { status, reason },
         {
           runValidators: true,
           new: true,

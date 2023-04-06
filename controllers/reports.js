@@ -80,9 +80,19 @@ class ReportsController {
     try {
       const { reportId } = req.params;
       const { status } = req.body;
+      let title, description;
+      if (!req.body.title || !req.body.description) {
+        title = "";
+        description = "";
+      } else {
+        title = req.body.title;
+        description = req.body.description;
+      };
+      const reason = {title: title, description: description};
       const { error, data } = await ReportsServices.editStateReport(
         reportId,
-        status
+        status,
+        reason
       );
       if (error) return res.status(404).send(data);
       if (data.status === "closed") {
