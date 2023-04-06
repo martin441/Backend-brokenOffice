@@ -68,7 +68,7 @@ async function sendEmail (report, op, shareMail) {
 
     const sended = await transporter.sendMail({
       from: op ? NM_EMAIL : `${report.issuer.email}`,
-      to: op ? `${report.issuer.email}` : shareMail,
+      to: op === 2 ? shareMail : `${report.issuer.email}`,
       subject: `Broken Office Report: ${report.title}`,
       html: finalHtml,
       attachments: [{
