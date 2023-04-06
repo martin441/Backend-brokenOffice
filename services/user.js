@@ -9,6 +9,7 @@ class UserServices {
       return { error: true, data: error };
     }
   }
+
   static async updateProfile(obj, email) {
     try {
       const userUpdated = await User.findOneAndUpdate({ email }, obj, {
@@ -20,6 +21,7 @@ class UserServices {
       return { error: true, data: error };
     }
   }
+  
   static async updatePassword(password, user) {
     try {
       user.password = password;
