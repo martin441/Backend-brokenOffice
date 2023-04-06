@@ -5,7 +5,7 @@ class ChatServices {
   static async createNewChat(room) {
     try {
       const existingChat = await Chat.findOne({ room });
-      if (existingChat.room) {
+      if (existingChat) {
         return { error: false, data: existingChat };
       }
       const newChat = await Chat.create({ room });
