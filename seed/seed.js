@@ -175,7 +175,7 @@ const seedUserOffices = async () => {
       },
       location: {
         type: "Point",
-        coordinates: [-65.30289562719635, -26.799240489041185],
+        coordinates: [-60.657478, -32.953828],
       },
     },
     {
