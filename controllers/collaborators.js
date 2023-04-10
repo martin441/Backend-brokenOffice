@@ -1,4 +1,5 @@
 const CollaboratorsServices = require("../services/collaborators");
+const ReportsServices = require("../services/reports");
 const UserServices = require("../services/user");
 require("dotenv").config();
 const { ALPHA, ALPHAT, OMEGA } = process.env;
@@ -19,7 +20,9 @@ class CollaboratorsController {
       const { userId } = req.params;
       const { error, data } = await CollaboratorsServices.findUserById(userId);
       if (error) return res.status(404).send(data);
-      res.status(200).send(data);
+      const reports = await ReportsServices.getReports(userId);
+      if (reports.error) return res.status(404).send(reports.data);
+      res.status(200).send({user: data, reports: reports.data});
     } catch (error) {
       res.status(404).send(error);
     }
