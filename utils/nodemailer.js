@@ -28,13 +28,19 @@ async function sendEmail(report, op, shareMail) {
     varTo = report.issuer.email;
   }
 
+  let varSubject;
+  if (op === 5) {
+    varSubject = `Broken Office Restore Password`
+  } else if (op === 6) {
+    varSubject = "Broken Office Password Update"
+  } else {
+    varSubject = `Broken Office Report: ${report.title}`
+  }
+
   const sended = await transporter.sendMail({
     from: op ? NM_EMAIL : `${report.issuer.email}`,
     to: varTo,
-    subject:
-      op === 5
-        ? `Broken Office Restore Password`
-        : `Broken Office Report: ${report.title}`,
+    subject: varSubject,
     html: htmlToSend,
     attachments: [
       {
