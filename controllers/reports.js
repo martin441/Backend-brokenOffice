@@ -113,11 +113,10 @@ class ReportsController {
       if (error) return res.status(404).send(data);
       if (data.status === "resolved") {
         sendEmail(data, 3);
-      }
-      if (data.status === "rejected") {
+      } else if (data.status === "rejected") {
         sendEmail(data, 4);
       }
-      res.status(200).send("Report updated successfully");
+      res.status(200).send(data);
     } catch (error) {
       res.status(404).send(error);
     }
