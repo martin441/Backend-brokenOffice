@@ -21,15 +21,28 @@ const io = new Server(httpServer, {
 });
 
 io.on("connection", (socket) => {
-  console.log("socket id", socket.id);
+  console.log(`Socket ${socket.id} connected`);
 
-  socket.on("join_room", (data) => {
+  socket.on("join_room", async(data) => {
+    console.log(`Socket ${socket.id} joined room ${data}`);
     socket.join(data);
+    const numSockets = await io.in(data).fetchSockets();   
+   
+    for (const socket of numSockets) {
+      console.log(socket.id);
+      console.log(numSockets.length)
+    }
+  
   });
 
   socket.on("message_sent", (msg, user, room) => {
+    console.log(`Socket ${socket.id} sent a message to room ${room}`);
     const currentDate = new Date(Date.now());
-    const messageToSend = {user: {name:user}, content:msg, date: currentDate}
+    const messageToSend = {
+      user: { name: user },
+      content: msg,
+      date: currentDate,
+    };
     socket.to(room).emit("message_received", messageToSend);
   });
 
