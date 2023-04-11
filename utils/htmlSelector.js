@@ -1,8 +1,6 @@
 const fs = require("fs");
 const path = require("path");
 const handlebars = require("handlebars");
-require("dotenv").config();
-const { NM_EMAIL, NM_PASS } = process.env;
 
 const htmlSelector = (report, op) => {
   if (op === 1 || op === 2) {
@@ -21,7 +19,7 @@ const htmlSelector = (report, op) => {
     };
     const htmlToSend = template(replacements);
     return htmlToSend;
-  } else {
+  } else if (op === 3 || op === 4) {
     let route = "../assets/index3.html";
     if (op === 4) route = "../assets/index4.html";
     const filePath = path.join(__dirname, route);
@@ -36,6 +34,20 @@ const htmlSelector = (report, op) => {
       status: `${report.status}`,
       description: `${report.reason.description}`,
       title: `${report.reason.title}`,
+    };
+    const htmlToSend = template(replacements);
+    return htmlToSend;
+  } else if (op === 5 || op === 6) {
+    let route = "../assets/index5.html";
+    if (op === 6) route = "../assets/index6.html";
+    const filePath = path.join(__dirname, route);
+    const source = fs.readFileSync(filePath, "utf-8").toString();
+    const template = handlebars.compile(source);
+    const replacements = {
+      name: `${report.name}`,
+      lastName: `${report.lastName}`,
+      email: `${report.email}`,
+      token: `${report.tokenUrl}`,
     };
     const htmlToSend = template(replacements);
     return htmlToSend;
