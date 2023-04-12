@@ -102,6 +102,21 @@ class ChatsController {
         }
     }
 
+
+    static async issuerInbox(req,res,next) {
+        try{
+            const email = req.user.email
+            const user = await UserServices.findOneByEmail(email)
+            if (user.error) return res.status(404).send(user.data);
+            const issuerChats = await ChatServices.getIssuerChats(user._id)
+            console.log(issuerChats.data)
+            res.status(200).send("todo ok")
+        } catch(error){
+            res.status(404).send(error);
+        }
+    }
+
+
 }
 
 module.exports = ChatsController
