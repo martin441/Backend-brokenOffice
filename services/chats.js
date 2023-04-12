@@ -1,4 +1,4 @@
-const { Chat, Message, User } = require("../models");
+const { Chat, Message, User, Report } = require("../models");
 
 class ChatServices {
   static async createNewChat(room) {
@@ -103,6 +103,18 @@ class ChatServices {
       return { error: true, data: error };
     }
   }
+
+  static async getIssuerChats(issuerId) {
+    try {
+      const issuerReports = await Report.find({issuer: issuerId})
+      const issuerReportsIds = issuerReports((report) => report._id)
+      const issuerChats = await Chat.find()
+      return { error: false, data: issuerChats };
+    } catch (error) {
+      return { error: true, data: error };
+    }
+  }
+
 }
 
 module.exports = ChatServices;
