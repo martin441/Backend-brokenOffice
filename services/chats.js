@@ -52,6 +52,19 @@ class ChatServices {
     }
   }
 
+  static async getChatLength(chatRoom) {
+    try {
+      const chat = await Chat.find({ room: chatRoom }); 
+      if (chat[0].allMessages?.length === 0) {
+        return { error: false, data: "No Chat History" };
+      }
+      const chatLength = chat[0].allMessages.length;    
+      return { error: false, data: chatLength };
+    } catch (error) {
+      return { error: true, data: error };
+    }
+  }
+
   static async recordIssuerLength(email, chatLength, chatId) {
     try {
       const userWithChat = await User.findOne({
@@ -68,11 +81,14 @@ class ChatServices {
         user.save();
         return { error: false, data: user };
       } else {
-        userWithChat.issuerMessages.map((chat) =>{ if(chat.chatId === chatId){chat.chatLength = chatLength}})
+        userWithChat.issuerMessages.map((chat) => {
+          if (chat.chatId === chatId) {
+            chat.chatLength = chatLength;
+          }
+        });
         userWithChat.save();
         return { error: false, data: userWithChat };
-      } 
-
+      }
     } catch (error) {
       return { error: true, data: error };
     }
@@ -94,11 +110,14 @@ class ChatServices {
         user.save();
         return { error: false, data: user };
       } else {
-        userWithChat.solverMessages.map((chat) =>{ if(chat.chatId === chatId){chat.chatLength = chatLength}})
+        userWithChat.solverMessages.map((chat) => {
+          if (chat.chatId === chatId) {
+            chat.chatLength = chatLength;
+          }
+        });
         userWithChat.save();
         return { error: false, data: userWithChat };
-      } 
-
+      }
     } catch (error) {
       return { error: true, data: error };
     }

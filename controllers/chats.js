@@ -72,13 +72,13 @@ class ChatsController {
     static async checkIssuerLength(req,res,next) {
         try{
             const email = req.user.email
-            const {chatId} = req.params
-            const chat = await ChatServices.getChatHistory(chatId)
-            if (chat.error) return res.status(404).send(chat.data);
-            const chatLength = chat.data.allMessages.length
+            const {chatRoom} = req.params
+            const chatLength = await ChatServices.getChatLength(chatRoom);
+            console.log("chatLength", chatLength)
+            if (chatLength.error) return res.status(404).send(chatLength.data);            
             const user = await UserServices.findOneByEmail(email)
             if (user.error) return res.status(404).send(user.data);
-            const issuerLength = user.data.issuerMessages.find((chat) => chat.chatId === chatId).chatLength
+            const issuerLength = user.data.issuerMessages.find((chat) => chat.room === chatRoom).chatLength
             const notifications = (chatLength-issuerLength).toString()
             res.status(200).send(notifications)
         } catch(error){
@@ -89,13 +89,12 @@ class ChatsController {
     static async checkSolverLength(req,res,next) {
         try{
             const email = req.user.email
-            const {chatId} = req.params
-            const chat = await ChatServices.getChatHistory(chatId)
-            if (chat.error) return res.status(404).send(chat.data);
-            const chatLength = chat.data.allMessages.length
+            const {chatRoom} = req.params
+            const chatLength = await ChatServices.getChatLength(chatRoom);
+            if (chatLength.error) return res.status(404).send(chatLength.data);          
             const user = await UserServices.findOneByEmail(email)
             if (user.error) return res.status(404).send(user.data);
-            const solverLength = user.data.solverMessages.find((chat) => chat.chatId === chatId).chatLength
+            const solverLength = user.data.solverMessages.find((chat) => chat.room === chatRoom).chatLength
             const notifications = (chatLength-solverLength).toString()
             res.status(200).send(notifications)
         } catch(error){
