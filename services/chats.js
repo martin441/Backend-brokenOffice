@@ -1,5 +1,4 @@
-const { Chat, Message } = require("../models");
-const UserServices = require("./user");
+const { Chat, Message, User } = require("../models");
 
 class ChatServices {
   static async createNewChat(room) {
@@ -27,8 +26,8 @@ class ChatServices {
       }
       chatRoom.allMessages.push(newMessage._id);
       chatRoom.save();
-      const populatedMessage = await newMessage.populate("user")
-      console.log(populatedMessage)
+      const populatedMessage = await newMessage.populate("user");
+      console.log(populatedMessage);
       return { error: false, data: populatedMessage };
     } catch (error) {
       return { error: true, data: error };
@@ -48,6 +47,58 @@ class ChatServices {
         },
       });
       return { error: false, data: chatWithMessages };
+    } catch (error) {
+      return { error: true, data: error };
+    }
+  }
+
+  static async recordIssuerLength(email, chatLength, chatId) {
+    try {
+      const userWithChat = await User.findOne({
+        email: email,
+        "issuerMessages.chatId": chatId,
+      });
+
+      if (!userWithChat) {
+        const user = await User.findOne({ email });
+        user.issuerMessages?.push({
+          chatId: chatId,
+          chatLength: chatLength,
+        });
+        user.save();
+        return { error: false, data: user };
+      } else {
+        userWithChat.issuerMessages.map((chat) =>{ if(chat.chatId === chatId){chat.chatLength = chatLength}})
+        userWithChat.save();
+        return { error: false, data: userWithChat };
+      } 
+
+    } catch (error) {
+      return { error: true, data: error };
+    }
+  }
+
+  static async recordSolverLength(email, chatLength, chatId) {
+    try {
+      const userWithChat = await User.findOne({
+        email: email,
+        "solverMessages.chatId": chatId,
+      });
+
+      if (!userWithChat) {
+        const user = await User.findOne({ email });
+        user.solverMessages?.push({
+          chatId: chatId,
+          chatLength: chatLength,
+        });
+        user.save();
+        return { error: false, data: user };
+      } else {
+        userWithChat.solverMessages.map((chat) =>{ if(chat.chatId === chatId){chat.chatLength = chatLength}})
+        userWithChat.save();
+        return { error: false, data: userWithChat };
+      } 
+
     } catch (error) {
       return { error: true, data: error };
     }

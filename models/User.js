@@ -65,6 +65,14 @@ const user = new Schema({
     type: Number,
     default: 0
   },
+  issuerMessages: [{
+    chatId: {type: String},
+    chatLength: {type: Number}
+  }],
+  solverMessages: [{
+    chatId: {type: String},
+    chatLength: {type: Number}
+  }],
 });
 
 user.methods.encryptPassword = function (password, salt) {
