@@ -54,11 +54,11 @@ class ChatServices {
 
   static async getChatLength(chatRoom) {
     try {
-      const chat = await Chat.find({ room: chatRoom }); 
+      const chat = await Chat.find({ room: chatRoom });
       if (chat[0].allMessages?.length === 0) {
         return { error: false, data: "No Chat History" };
       }
-      const chatLength = chat[0].allMessages.length;    
+      const chatLength = chat[0].allMessages.length;
       return { error: false, data: chatLength };
     } catch (error) {
       return { error: true, data: error };
@@ -73,14 +73,22 @@ class ChatServices {
       });
 
       if (!userWithChat) {
-        const user = await User.findOne({ email });
-        user.issuerMessages?.push({
+        const issuer = await User.findOne({ email });
+        issuer.issuerMessages?.push({
           chatId: chatId,
           chatLength: chatLength,
-          chatRoom:chatRoom
+          chatRoom: chatRoom,
         });
-        user.save();
-        return { error: false, data: user };
+        issuer.save();
+        const report = await Report.findById(chatRoom).populate("solver");
+        const solver = report.solver;
+        solver.solverMessages?.push({
+          chatId: chatId,
+          chatLength: chatLength,
+          chatRoom: chatRoom,
+        });
+        solver.save()
+        return { error: false, data: issuer };
       } else {
         userWithChat.issuerMessages.map((chat) => {
           if (chat.chatId === chatId) {
@@ -103,14 +111,24 @@ class ChatServices {
       });
 
       if (!userWithChat) {
-        const user = await User.findOne({ email });
-        user.solverMessages?.push({
+        const solver = await User.findOne({ email });
+        solver.solverMessages?.push({
           chatId: chatId,
           chatLength: chatLength,
-          chatRoom: chatRoom
+          chatRoom: chatRoom,
         });
-        user.save();
-        return { error: false, data: user };
+        solver.save();
+
+        const report = await Report.findById(chatRoom).populate("issuer");
+        const issuer = report.issuer;
+        issuer.issuerMessages?.push({
+          chatId: chatId,
+          chatLength: chatLength,
+          chatRoom: chatRoom,
+        });
+        issuer.save()
+
+        return { error: false, data: solver };
       } else {
         userWithChat.solverMessages.map((chat) => {
           if (chat.chatId === chatId) {
@@ -127,15 +145,29 @@ class ChatServices {
 
   static async getIssuerChats(issuerId) {
     try {
-      const issuerReports = await Report.find({issuer: issuerId})
-      const issuerReportsIds = issuerReports((report) => report._id)
-      const issuerChats = await Chat.find()
+      const issuerReports = await Report.find({ issuer: issuerId }).populate([
+        "solver",
+        "issuer",
+      ]);
+      const chats = await Promise.all(
+        issuerReports.map(async (report) => {
+          const chat = await Chat.findOne({ room: report._id });
+          if (chat)
+            return {
+              id: chat._id,
+              room: chat.room,
+              allMessages: chat.allMessages,
+              solver: report.solver.name,
+              issuer: report.issuer.name,
+            };
+        })
+      );
+      const issuerChats = chats.filter((chat) => chat !== undefined);
       return { error: false, data: issuerChats };
     } catch (error) {
       return { error: true, data: error };
     }
   }
-
 }
 
 module.exports = ChatServices;
