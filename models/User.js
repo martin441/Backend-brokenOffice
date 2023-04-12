@@ -41,7 +41,10 @@ const user = new Schema({
     required: [true, "Please enter an email"],
     lowercase: true,
     unique: true,
-    match: [/^\w+([.-]?\w+)@\w+([.-]?\w+)(\.\w{2,})+$/, 'Please fill a valid email address']
+    match: [
+      /^\w+([.-]?\w+)@\w+([.-]?\w+)(\.\w{2,})+$/,
+      "Please fill a valid email address",
+    ],
   },
   addressName: {
     type: String,
@@ -63,16 +66,22 @@ const user = new Schema({
   },
   activeReports: {
     type: Number,
-    default: 0
+    default: 0,
   },
-  issuerMessages: [{
-    chatId: {type: String},
-    chatLength: {type: Number}
-  }],
-  solverMessages: [{
-    chatId: {type: String},
-    chatLength: {type: Number}
-  }],
+  issuerMessages: [
+    {
+      chatId: { type: String },
+      chatLength: { type: Number },
+      chatRoom: { type: String },
+    },
+  ],
+  solverMessages: [
+    {
+      chatId: { type: String },
+      chatLength: { type: Number },
+      chatRoom: { type: String },
+    },
+  ],
 });
 
 user.methods.encryptPassword = function (password, salt) {

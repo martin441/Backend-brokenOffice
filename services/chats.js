@@ -65,7 +65,7 @@ class ChatServices {
     }
   }
 
-  static async recordIssuerLength(email, chatLength, chatId) {
+  static async recordIssuerLength(email, chatLength, chatId, chatRoom) {
     try {
       const userWithChat = await User.findOne({
         email: email,
@@ -77,6 +77,7 @@ class ChatServices {
         user.issuerMessages?.push({
           chatId: chatId,
           chatLength: chatLength,
+          chatRoom:chatRoom
         });
         user.save();
         return { error: false, data: user };
@@ -94,7 +95,7 @@ class ChatServices {
     }
   }
 
-  static async recordSolverLength(email, chatLength, chatId) {
+  static async recordSolverLength(email, chatLength, chatId, chatRoom) {
     try {
       const userWithChat = await User.findOne({
         email: email,
@@ -106,6 +107,7 @@ class ChatServices {
         user.solverMessages?.push({
           chatId: chatId,
           chatLength: chatLength,
+          chatRoom: chatRoom
         });
         user.save();
         return { error: false, data: user };

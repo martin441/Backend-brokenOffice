@@ -50,8 +50,8 @@ class ChatsController {
     static async recordIssuerLength(req,res,next) {
         try{
             const email = req.user.email
-            const {chatLength, chatId} = req.body
-            const updatedUser = await ChatServices.recordIssuerLength(email, chatLength, chatId)
+            const {chatLength, chatId, chatRoom} = req.body
+            const updatedUser = await ChatServices.recordIssuerLength(email, chatLength, chatId, chatRoom)
             res.status(200).send(updatedUser.data)
         } catch(error){
             res.status(404).send(error);
@@ -61,8 +61,8 @@ class ChatsController {
     static async recordSolverLength(req,res,next) {
         try{
             const email = req.user.email
-            const {chatLength, chatId} = req.body
-            const updatedUser = await ChatServices.recordSolverLength(email, chatLength, chatId)
+            const {chatLength, chatId, chatRoom} = req.body
+            const updatedUser = await ChatServices.recordSolverLength(email, chatLength, chatId, chatRoom)
             res.status(200).send(updatedUser)
         } catch(error){
             res.status(404).send(error);
@@ -78,9 +78,9 @@ class ChatsController {
             if (chatLength.error) return res.status(404).send(chatLength.data);            
             const user = await UserServices.findOneByEmail(email)
             if (user.error) return res.status(404).send(user.data);
-            const issuerLength = user.data.issuerMessages.find((chat) => chat.room === chatRoom).chatLength
-            const notifications = (chatLength-issuerLength).toString()
-            res.status(200).send(notifications)
+            const issuerLength = user.data.issuerMessages.find((chat) => chat.chatRoom === chatRoom).chatLength
+            const notifications = (chatLength.data-issuerLength)
+            res.status(200).send(notifications.toString())
         } catch(error){
             res.status(404).send(error);
         }
@@ -94,14 +94,13 @@ class ChatsController {
             if (chatLength.error) return res.status(404).send(chatLength.data);          
             const user = await UserServices.findOneByEmail(email)
             if (user.error) return res.status(404).send(user.data);
-            const solverLength = user.data.solverMessages.find((chat) => chat.room === chatRoom).chatLength
-            const notifications = (chatLength-solverLength).toString()
-            res.status(200).send(notifications)
+            const solverLength = user.data.solverMessages.find((chat) => chat.chatRoom === chatRoom).chatLength
+            const notifications = (chatLength.data-solverLength)
+            res.status(200).send(notifications.toString())
         } catch(error){
             res.status(404).send(error);
         }
     }
-
 
 }
 
