@@ -153,16 +153,25 @@ class ChatServices {
       const chats = await Promise.all(
         issuerReports.map(async (report) => {
           const chat = await Chat.findOne({ room: report._id });
-          if (chat)
+
+          if (chat && chat.allMessages.length !== 0) {
+            const lastMessageId =
+              chat.allMessages[Number(chat.allMessages.length) - 1].toString();
+            const lastMessage = await Message.findOne({ _id: lastMessageId });
             return {
               id: chat._id,
               room: chat.room,
               allMessages: chat.allMessages,
+              date: lastMessage?.date,
+              lastMessage: lastMessage?.content,
               solver: report.solver.name,
+              solverPic: report.solver.picture || "no pic",
               issuer: report.issuer.name,
             };
+          }
         })
       );
+
       const issuerChats = chats.filter((chat) => chat !== undefined);
       if (issuerChats.length === 0) return { error: true, data: "No chats" };
       return { error: false, data: issuerChats };
@@ -182,14 +191,21 @@ class ChatServices {
       const chats = await Promise.all(
         solverReports.map(async (report) => {
           const chat = await Chat.findOne({ room: report._id });
-          if (chat)
+          if (chat && chat.allMessages.length !== 0) {
+            const lastMessageId =
+              chat.allMessages[Number(chat.allMessages.length) - 1].toString();
+            const lastMessage = await Message.findOne({ _id: lastMessageId });
             return {
               id: chat._id,
               room: chat.room,
               allMessages: chat.allMessages,
+              date: lastMessage?.date,
+              lastMessage: lastMessage?.content,
               solver: report.solver.name,
               issuer: report.issuer.name,
+              issuerPic: report.solver.picture || "no pic",
             };
+          }
         })
       );
       const solverChats = chats.filter((chat) => chat !== undefined);
