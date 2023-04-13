@@ -123,7 +123,6 @@ class ChatsController {
       const user = await UserServices.findOneByEmail(email);
       if (user.error) return res.status(200).send(user.data);
       const issuerChats = await ChatServices.getIssuerChats(user.data._id);
-
       if (issuerChats.error) return res.status(200).send(issuerChats.data);
       const issuerNotifications = await Promise.all(
         issuerChats.data.map(async (chat) => {
@@ -135,6 +134,9 @@ class ChatsController {
             const notifications = chat.allMessages.length - found.chatLength;
             const obj = {
               sender: chat.solver,
+              senderPic: chat.solverPic,
+              lastMessage: chat.lastMessage,
+              date: chat.date,
               report: chat.room,
               notifications: notifications,
             };
@@ -159,7 +161,7 @@ class ChatsController {
         notifications: filteredIssuerNotifications,
         total: allNotifications,
       };
-
+     
       res.status(200).send(obj);
     } catch (error) {
       res.status(404).send(error);
@@ -184,6 +186,9 @@ class ChatsController {
             const notifications = chat.allMessages.length - found.chatLength;
             const obj = {
               sender: chat.issuer,
+              senderPic: chat.issuerPic,
+              lastMessage: chat.lastMessage,
+              date: chat.date,
               report: chat.room,
               notifications: notifications,
             };
@@ -207,6 +212,7 @@ class ChatsController {
         notifications: filteredSolverNotifications,
         total: allNotifications,
       };
+      console.log(obj)
       res.status(200).send(obj);
     } catch (error) {
       res.status(404).send(error);
