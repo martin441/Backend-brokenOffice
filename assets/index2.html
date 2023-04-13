@@ -67,11 +67,19 @@
     <div class="container">
       <div class="messageBodyContainer">
         <div class="header">
-          <h1>Hey Glober,</h1>
-          <h4>{{issuer}} wants to share their report with you!</h4>
+          <h1>Hey,</h1>
+          <h4>{{issuer}} wants to share a report with you!</h4>
         </div>
         <div class="detailsBar">
           <p class="detailbar-title">Details:</p>
+          <div class="detail-wrapper">
+            <p class="detail-title">Title:</p>
+            <p class="detail-info">{{reportTitle}}</p>
+          </div>
+          <div class="detail-wrapper">
+            <p class="detail-title">Description:</p>
+            <p class="detail-info">{{reportDescription}}</p>
+          </div>
           <div class="detail-wrapper">
             <p class="detail-title">Order:</p>
             <p class="detail-info">{{order}}</p>
@@ -96,6 +104,16 @@
             <p class="detail-title">Status:</p>
             <p class="detail-info">{{status}}</p>
           </div>
+          {{#if check}}
+          <div class="detail-wrapper">
+            <p class="detail-title">Closed report title:</p>
+            <p class="detail-info">{{title}}</p>
+          </div>
+          <div class="detail-wrapper">
+            <p class="detail-title">Closed report description:</p>
+            <p class="detail-info">{{description}}</p>
+          </div>
+          {{/if}}
         </div>
         <div class="footer">
           <img src="cid:unique@kreata.ee" alt="globant-logo" class="logo" />
