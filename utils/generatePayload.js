@@ -13,6 +13,8 @@ function generatePayload(data) {
     picture: data.picture || "",
     office: data.office || "",
     activeReports: data.activeReports || 0,
+    issuerMessages: data.issuerMessages,
+    solverMessages: data.solverMessages,
   };
   const token = generateToken(payload);
   return { token, payload };
