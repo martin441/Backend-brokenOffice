@@ -121,10 +121,10 @@ class ChatsController {
     try {
       const email = req.user.email;
       const user = await UserServices.findOneByEmail(email);
-      if (user.error) return res.status(404).send(user.data);
+      if (user.error) return res.status(200).send(user.data);
       const issuerChats = await ChatServices.getIssuerChats(user.data._id);
 
-      if (issuerChats.error) return res.status(404).send(issuerChats.data);
+      if (issuerChats.error) return res.status(200).send(issuerChats.data);
       const issuerNotifications = await Promise.all(
         issuerChats.data.map(async (chat) => {
           const found = await user.data.issuerMessages.find((el) => {
@@ -148,7 +148,7 @@ class ChatsController {
       );
 
       if (filteredIssuerNotifications.length === 0)
-        return res.status(404).send("No notifications");
+        return res.status(200).send("No notifications");
 
       const allNotifications = filteredIssuerNotifications.reduce(
         (acc, chat) => (acc += chat.notifications),
@@ -173,7 +173,7 @@ class ChatsController {
       if (user.error) return res.status(404).send(user.data);
       const solverChats = await ChatServices.getSolverChats(user.data._id);
 
-      if (solverChats.error) return res.status(404).send(solverChats.data);
+      if (solverChats.error) return res.status(200).send(solverChats.data);
       const solverNotifications = await Promise.all(
         solverChats.data.map(async (chat) => {
           const found = await user.data.solverMessages.find((el) => {
@@ -183,7 +183,7 @@ class ChatsController {
           if (found) {
             const notifications = chat.allMessages.length - found.chatLength;
             const obj = {
-              sender: chat.solver,
+              sender: chat.issuer,
               report: chat.room,
               notifications: notifications,
             };
@@ -196,7 +196,7 @@ class ChatsController {
       );
 
       if (filteredSolverNotifications.length === 0)
-        return res.status(404).send("No notifications");
+        return res.status(200).send("No notifications");
 
       const allNotifications = filteredSolverNotifications.reduce(
         (acc, chat) => (acc += chat.notifications),
