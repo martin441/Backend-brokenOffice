@@ -27,7 +27,6 @@ class ChatServices {
       chatRoom.allMessages.push(newMessage._id);
       chatRoom.save();
       const populatedMessage = await newMessage.populate("user");
-      console.log(populatedMessage);
       return { error: false, data: populatedMessage };
     } catch (error) {
       return { error: true, data: error };
@@ -87,7 +86,7 @@ class ChatServices {
           chatLength: chatLength,
           chatRoom: chatRoom,
         });
-        solver.save()
+        solver.save();
         return { error: false, data: issuer };
       } else {
         userWithChat.issuerMessages.map((chat) => {
@@ -126,7 +125,7 @@ class ChatServices {
           chatLength: chatLength,
           chatRoom: chatRoom,
         });
-        issuer.save()
+        issuer.save();
 
         return { error: false, data: solver };
       } else {
@@ -149,6 +148,8 @@ class ChatServices {
         "solver",
         "issuer",
       ]);
+      if (issuerReports.length === 0)
+        return { error: true, data: "No reports" };
       const chats = await Promise.all(
         issuerReports.map(async (report) => {
           const chat = await Chat.findOne({ room: report._id });
@@ -163,7 +164,37 @@ class ChatServices {
         })
       );
       const issuerChats = chats.filter((chat) => chat !== undefined);
+      if (issuerChats.length === 0) return { error: true, data: "No chats" };
       return { error: false, data: issuerChats };
+    } catch (error) {
+      return { error: true, data: error };
+    }
+  }
+
+  static async getSolverChats(solverId) {
+    try {
+      const solverReports = await Report.find({ solver: solverId }).populate([
+        "solver",
+        "issuer",
+      ]);
+      if (solverReports.length === 0)
+        return { error: true, data: "No reports" };
+      const chats = await Promise.all(
+        solverReports.map(async (report) => {
+          const chat = await Chat.findOne({ room: report._id });
+          if (chat)
+            return {
+              id: chat._id,
+              room: chat.room,
+              allMessages: chat.allMessages,
+              solver: report.solver.name,
+              issuer: report.issuer.name,
+            };
+        })
+      );
+      const solverChats = chats.filter((chat) => chat !== undefined);
+      if (solverChats.length === 0) return { error: true, data: "No chats" };
+      return { error: false, data: solverChats };
     } catch (error) {
       return { error: true, data: error };
     }

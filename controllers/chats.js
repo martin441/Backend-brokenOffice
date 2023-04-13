@@ -84,7 +84,6 @@ class ChatsController {
       const email = req.user.email;
       const { chatRoom } = req.params;
       const chatLength = await ChatServices.getChatLength(chatRoom);
-      console.log("chatLength", chatLength);
       if (chatLength.error) return res.status(404).send(chatLength.data);
       const user = await UserServices.findOneByEmail(email);
       if (user.error) return res.status(404).send(user.data);
@@ -125,11 +124,10 @@ class ChatsController {
       if (user.error) return res.status(404).send(user.data);
       const issuerChats = await ChatServices.getIssuerChats(user.data._id);
 
+      if (issuerChats.error) return res.status(404).send(issuerChats.data);
       const issuerNotifications = await Promise.all(
         issuerChats.data.map(async (chat) => {
-          console.log(user.data.issuerMessages);
           const found = await user.data.issuerMessages.find((el) => {
-            console.log(el.chatId, chat.id);
             return el.chatId === chat.id.toString();
           });
 
@@ -144,17 +142,69 @@ class ChatsController {
           }
         })
       );
+
       const filteredIssuerNotifications = issuerNotifications.filter(
-        (notification) => notification !== undefined
+        (chat) => chat !== undefined && chat.notifications !== 0
       );
+
+      if (filteredIssuerNotifications.length === 0)
+        return res.status(404).send("No notifications");
 
       const allNotifications = filteredIssuerNotifications.reduce(
         (acc, chat) => (acc += chat.notifications),
         0
       );
-     
+
       const obj = {
         notifications: filteredIssuerNotifications,
+        total: allNotifications,
+      };
+
+      res.status(200).send(obj);
+    } catch (error) {
+      res.status(404).send(error);
+    }
+  }
+
+  static async solverInbox(req, res, next) {
+    try {
+      const email = req.user.email;
+      const user = await UserServices.findOneByEmail(email);
+      if (user.error) return res.status(404).send(user.data);
+      const solverChats = await ChatServices.getSolverChats(user.data._id);
+
+      if (solverChats.error) return res.status(404).send(solverChats.data);
+      const solverNotifications = await Promise.all(
+        solverChats.data.map(async (chat) => {
+          const found = await user.data.solverMessages.find((el) => {
+            return el.chatId === chat.id.toString();
+          });
+
+          if (found) {
+            const notifications = chat.allMessages.length - found.chatLength;
+            const obj = {
+              sender: chat.solver,
+              report: chat.room,
+              notifications: notifications,
+            };
+            return obj;
+          }
+        })
+      );
+      const filteredSolverNotifications = solverNotifications.filter(
+        (chat) => chat !== undefined && chat.notifications !== 0
+      );
+
+      if (filteredSolverNotifications.length === 0)
+        return res.status(404).send("No notifications");
+
+      const allNotifications = filteredSolverNotifications.reduce(
+        (acc, chat) => (acc += chat.notifications),
+        0
+      );
+
+      const obj = {
+        notifications: filteredSolverNotifications,
         total: allNotifications,
       };
       res.status(200).send(obj);
