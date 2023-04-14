@@ -15,7 +15,7 @@ class OfficesController {
     try {
       const { error, data } = await OfficesServices.addNewOffice(req.body);
       if (error) return res.status(404).send(data);
-      res.status(201).send("Office created successfully");
+      res.status(201).send(data);
     } catch (error) {
       res.status(404).send(error);
     }
