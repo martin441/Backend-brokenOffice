@@ -51,5 +51,5 @@ https://dbdiagram.io/d/6426d6e55758ac5f1725c2a6
 API Documentation
 
 ```
-https://documenter.getpostman.com/view/26589377/2s93RTPryD#1810a09b-b587-474e-9658-527679a3a430
+https://documenter.getpostman.com/view/26589377/2s93RTPryD
 ```
