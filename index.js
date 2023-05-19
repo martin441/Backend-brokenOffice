@@ -23,16 +23,15 @@ const io = new Server(httpServer, {
 io.on("connection", (socket) => {
   console.log(`Socket ${socket.id} connected`);
 
-  socket.on("join_room", async(data) => {
+  socket.on("join_room", async (data) => {
     console.log(`Socket ${socket.id} joined room ${data}`);
     socket.join(data);
-    const numSockets = await io.in(data).fetchSockets();   
-   
+    const numSockets = await io.in(data).fetchSockets();
+
     for (const socket of numSockets) {
       console.log(socket.id);
-      console.log(numSockets.length)
+      console.log(numSockets.length);
     }
-  
   });
 
   socket.on("message_sent", (msg, user, room) => {
@@ -74,6 +73,10 @@ app.use(volleyball);
 app.use(express.json());
 
 app.use("/", router);
+
+app.use("/", (req, res) => {
+  res.send("Bienvenido al Backend de Broken Office");
+});
 
 app.use((err, req, res, next) => {
   console.error(err);
