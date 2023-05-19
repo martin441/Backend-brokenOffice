@@ -61,8 +61,7 @@ class UserController {
       const isValid = await data.validatePassword(password);
       if (!isValid) return res.status(401).send("Invalid credentials");
       const { token, payload } = generatePayload(data);
-      res.cookie("token", token);
-      res.status(200).send(payload);
+      res.status(200).send(payload).cookie("token", token);
     } catch (error) {
       res.status(404).send(error);
     }
@@ -104,11 +103,11 @@ class UserController {
     try {
       const { error, data } = await UserServices.findOneByEmail(email);
       if (error) return res.status(404).send(data);
-      if (!data) return res.status(404).send("Invalid credentials")
-      const { token, payload } = generatePayloadRestore(data)
-      const tokenUrl = await UserServices.createPassLink(email, token)
+      if (!data) return res.status(404).send("Invalid credentials");
+      const { token, payload } = generatePayloadRestore(data);
+      const tokenUrl = await UserServices.createPassLink(email, token);
       if (tokenUrl.error) return res.status(404).send("Invalid credentials");
-      data.tokenUrl = tokenUrl.data
+      data.tokenUrl = tokenUrl.data;
       sendEmail(data, 5);
       res.status(200).send();
     } catch (error) {
@@ -118,9 +117,9 @@ class UserController {
 
   static async restorePassword(req, res, next) {
     const { password } = req.body;
-    const { token } = req.params
+    const { token } = req.params;
     try {
-      const valid = await UserServices.validateLink(token)
+      const valid = await UserServices.validateLink(token);
       if (valid.error) return res.status(404).send(valid.data);
       if (!valid.data) return res.status(404).send("No data");
       const user = await UserServices.findOneByEmail(valid.data.email);
@@ -131,7 +130,7 @@ class UserController {
         user.data
       );
       if (updatedUser.error) return res.status(404).send(updatedUser.data);
-      await UserServices.deleteLink(valid.data.email)
+      await UserServices.deleteLink(valid.data.email);
       sendEmail(user.data, 6);
       res.status(200).send("Password updated successfully");
     } catch (error) {
