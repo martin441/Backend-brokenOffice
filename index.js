@@ -19,6 +19,9 @@ const ORIGIN = process.env.CORS_ORIGIN || "http://localhost:3000";
 const io = new Server(httpServer, {
   cors: {
     origin: ORIGIN,
+    credentials: true,
+    methods: "GET,POST,PUT,DELETE",
+    allowedHeaders: "Content-Type,Authorization",
   },
 });
 
