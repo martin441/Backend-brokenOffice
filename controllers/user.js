@@ -61,7 +61,8 @@ class UserController {
       const isValid = await data.validatePassword(password);
       if (!isValid) return res.status(401).send("Invalid credentials");
       const { token, payload } = generatePayload(data);
-      res.status(200).send(payload).cookie("token", token);
+      res.cookie("token", token);
+      res.status(200).send(payload);
     } catch (error) {
       res.status(404).send(error);
     }
