@@ -79,7 +79,7 @@ app.use(volleyball);
 
 app.use(express.json());
 
-app.use("/", router);
+app.use("/api", router);
 
 app.use("/", (req, res) => {
   res.send("Bienvenido al Backend de Broken Office");
