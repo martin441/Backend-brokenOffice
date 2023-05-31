@@ -82,7 +82,7 @@ class UserController {
 
   static async logoutUser(req, res, next) {
     res
-      .clearCookie("token", { sameSite: "None", secure: true, path: "/api" })
+      .clearCookie("token", { sameSite: "None", secure: true })
       .status(204)
       .send();
   }
