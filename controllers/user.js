@@ -73,7 +73,10 @@ class UserController {
   }
 
   static async logoutUser(req, res, next) {
-    res.clearCookie("token").status(204).send();
+    res
+      .clearCookie("token", { sameSite: "None", secure: true })
+      .status(204)
+      .send();
   }
 
   static async editPicture(req, res, next) {
