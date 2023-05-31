@@ -18,7 +18,7 @@ const ORIGIN = process.env.CORS_ORIGIN || "http://localhost:3000";
 
 const io = new Server(httpServer, {
   cors: {
-    origin: ORIGIN,
+    origin: `https://frontend-broken-office.vercel.app`,
     credentials: true,
     methods: "GET,POST,PUT,DELETE",
     allowedHeaders: "Content-Type,Authorization",
@@ -68,7 +68,7 @@ app.use(cookiesParser());
 
 app.use(
   cors({
-    origin: ORIGIN,
+    origin: `https://frontend-broken-office.vercel.app`,
     credentials: true,
     methods: "GET,POST,PUT,DELETE",
     allowedHeaders: "Content-Type,Authorization",
